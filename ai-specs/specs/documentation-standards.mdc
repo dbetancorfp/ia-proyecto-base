@@ -23,10 +23,41 @@ When updating documentation, I will:
    - For data model changes: Update data model definition section in data-model.md
    - For API changes: Update api-spec.yml
    - For changes in libraries, database migrations, or anything that changes the installation process, update *-standards.mdc
+   - For new guides, workflow steps, or command changes: Update the corresponding page in docs/
 3. Update each affected documentation file in English, maintaining consistency with existing documentation
 4. Ensure all documentation is properly formatted and follows the established structure
 5. Verify that all changes are accurately reflected in the documentation
 6. Report which files were updated and what changes were made
+
+## Public Documentation (VitePress)
+
+The `docs/` folder is the public-facing documentation site, built with [VitePress](https://vitepress.dev) and deployed to GitHub Pages via `.github/workflows/docs.yml`.
+
+### Structure
+```
+docs/
+├── .vitepress/config.ts   ← Navigation, sidebar, theme
+├── index.md               ← Home page (hero layout)
+├── guide/                 ← How-to guides
+├── standards/             ← Tech standards summaries
+└── commands/              ← Slash command reference
+```
+
+### When to update docs/
+- New slash command added → add page to `docs/commands/`
+- New guide or workflow step → add page to `docs/guide/`
+- Standards file significantly changed → update the summary in `docs/standards/`
+- New page added → register it in the sidebar in `docs/.vitepress/config.ts`
+
+### Run locally
+```bash
+npm run docs:dev      # http://localhost:5173
+npm run docs:build    # build to docs/.vitepress/dist/
+npm run docs:preview  # preview the build
+```
+
+### Deployment
+Pushes to `main` that touch `docs/**` trigger the GitHub Actions workflow automatically. No manual step needed.
 
 ## AI specs
 

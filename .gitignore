@@ -22,11 +22,15 @@ build/
 .next/
 out/
 
+# ─── VitePress ────────────────────────────────────────────────────────────────
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
 # ─── Test & Coverage ──────────────────────────────────────────────────────────
 coverage/
 .nyc_output/
-cypress/screenshots/
-cypress/videos/
+playwright-report/
+test-results/
 
 # ─── Prisma ───────────────────────────────────────────────────────────────────
 prisma/migrations/**/migration_lock.toml
