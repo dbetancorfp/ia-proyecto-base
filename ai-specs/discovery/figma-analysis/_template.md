@@ -80,10 +80,10 @@ _Scenarios that will happen in production but have no Figma representation._
 
 _Notes for the developer about how to translate this design into components._
 
-- Use `React Bootstrap > Form.Control` for all input fields
-- Error banner maps to `React Bootstrap > Alert variant="danger"`
-- Colors must match `src/index.css` variables (see frontend-standards.mdc)
-- All interactive elements need `data-testid` attributes for Cypress tests
+- Use `PrimeVue > InputText` for all input fields
+- Error banner maps to `PrimeVue > Message severity="error"` or `InlineMessage`
+- Colors and design tokens must follow the project's PrimeVue theme configuration (see frontend-standards.mdc)
+- All interactive elements need `data-testid` attributes for Playwright tests
 
 ---
 
@@ -96,6 +96,6 @@ Read ai-specs/discovery/figma-analysis/{this-file}.md and
 ai-specs/discovery/client-interviews/{interview-file}.md
 
 Act as a Frontend Architect. Generate a component tree and implementation plan
-for this screen following our React + React Bootstrap standards in
+for this screen following our Vue 3 + PrimeVue 4 standards in
 ai-specs/specs/frontend-standards.mdc.
 ```

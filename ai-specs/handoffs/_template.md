@@ -20,15 +20,15 @@
 ## Completed This Session
 
 - [x] Step 0: Feature branch created (`feature/GH-N-backend`)
-- [x] Step 1: Validation function in `src/application/validator.ts`
+- [x] Step 1: Valibot schema in `server/services/auth/authSchema.ts`
 - [x] Step 2: Service method `authService.login()` implemented and tested
 
 ---
 
 ## In Progress (Incomplete)
 
-- [ ] Step 3: Express controller `authController.ts`
-  - `validate()` method done
+- [ ] Step 3: H3 event handler `server/api/auth/login.post.ts`
+  - Valibot validation done
   - `login()` handler: **50% complete** — request parsing done, response mapping pending
   - Blocked by: decision on whether to return full user object or just ID (see open questions)
 
@@ -36,14 +36,14 @@
 
 ## Next Step (Start Here Next Session)
 
-**Step 3 — Complete the login handler in `authController.ts`**
+**Step 3 — Complete the login handler in `server/api/auth/login.post.ts`**
 
 ```typescript
-// Continue from this point in src/presentation/controllers/authController.ts
-async login(req: Request, res: Response): Promise<void> {
-  // validate() is done
-  // TODO: call authService.login(), map result to response, handle errors
-}
+// Continue from this point in server/api/auth/login.post.ts
+export default defineEventHandler(async (event) => {
+  // readValidatedBody() is done
+  // TODO: call authService.login(), map result to response, handle errors with createError()
+});
 ```
 
 ---
@@ -70,9 +70,9 @@ async login(req: Request, res: Response): Promise<void> {
 ## Important Context for Next Session
 
 - DB uses soft deletes: `deletedAt` field, never hard DELETE
-- Auth middleware is at `src/presentation/middleware/auth.ts` — already implemented, just import it
-- User entity is at `src/domain/entities/User.ts` — has `validatePassword()` method
-- Tests are in `src/application/__tests__/authService.test.ts` — 8 tests, all passing
+- Auth middleware is at `server/middleware/auth.ts` — already implemented, just import it
+- User entity is at `server/domain/entities/User.ts` — has `validatePassword()` method
+- Tests are in `server/services/__tests__/authService.test.ts` — 8 tests, all passing
 
 ---
 
@@ -80,10 +80,10 @@ async login(req: Request, res: Response): Promise<void> {
 
 | File | Status |
 |---|---|
-| `src/application/validator.ts` | Modified — added `validateLoginInput()` |
-| `src/application/authService.ts` | Created — `login()` method |
-| `src/application/__tests__/authService.test.ts` | Created — 8 tests passing |
-| `src/presentation/controllers/authController.ts` | Created — incomplete |
+| `server/services/auth/authSchema.ts` | Created — Valibot schema `loginSchema` |
+| `server/services/auth/authService.ts` | Created — `login()` method |
+| `server/services/auth/__tests__/authService.test.ts` | Created — 8 tests passing |
+| `server/api/auth/login.post.ts` | Created — incomplete |
 
 ---
 
