@@ -34,7 +34,7 @@ When updating documentation, I will:
 The `docs/` folder is the public-facing documentation site, built with [VitePress](https://vitepress.dev) and deployed to GitHub Pages via `.github/workflows/docs.yml`.
 
 ### Language
-All content in `docs/` **must be written in English** — this is the public face of the project and must be consistent with the project-wide English-only rule.
+All content in `docs/` **must be written in Spanish** — this is the public face of the project and is intended for a Spanish-speaking audience. This is an exception to the English-only rule that applies to code, specs, and internal artifacts.
 
 ### Structure
 ```
