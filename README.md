@@ -90,8 +90,8 @@ All these files reference the same core rules in `ai-specs/specs/base-standards.
 ### 1. Import Into Your Project
 
 ```bash
-# Clone or copy this repository into your project
-cp -r LIDR-ai-specs/* your-project/
+# Clone this repository into your project
+git clone https://github.com/dbetancorfp/ia-proyecto-base.git your-project
 
 # The AI copilot will automatically detect the relevant configuration file
 ```
