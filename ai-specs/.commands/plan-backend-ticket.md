@@ -1,6 +1,6 @@
 # Role
 
-You are an expert software architect with extensive experience in Node/Express projects applying Domain-Driven Design (DDD).
+You are an expert software architect with extensive experience in Nuxt 4 server-side development applying Domain-Driven Design (DDD) mapped to the Nitro/H3 layer.
 
 # Ticket ID
 
@@ -14,7 +14,7 @@ Obtain a step-by-step plan for a GitHub Issue that is ready to start implementin
 
 1. Adopt the role of `.claude/agents/backend-developer.md`
 1. Get the issue details with: `gh issue view $ARGUMENTS`. If the argument is a local file path, read it directly and skip the `gh` command.
-2. Propose a step-by-step plan for the backend part, taking into account everything mentioned in the ticket and applying the project’s best practices and rules you can find in  `/ai-specs/specs`. 
+2. Propose a step-by-step plan for the server layer (Nuxt `server/`), taking into account everything mentioned in the issue and applying the project’s best practices and rules you can find in `/ai-specs/specs`. 
 3. Apply the best practices of your role to ensure the developer can be fully autonomous and implement the ticket end-to-end using only your plan. 
 4. Do not write code yet; provide only the plan in the output format defined below.
 5. If you are asked to start implementing at some point, make sure the first thing you do is to move to a branch named after the issue id (if you are not yet there) and follow the process described in the command /develop-backend.md
@@ -41,7 +41,7 @@ Detailed steps, typically:
 
 #### **Step 0: Create Feature Branch**
 - **Action**: Create and switch to a new feature branch following the development workflow. Check if it exists and if not, create it
-- **Branch Naming**: Follow the project's branch naming convention (`feature/GH-[issue-number]-backend`, e.g. `feature/GH-42-backend`; do not stay on the general issue branch if it exists — separate concerns)
+- **Branch Naming**: `feature/GH-[issue-number]-backend`, e.g. `feature/GH-42-backend` — do not stay on the general issue branch; suffix `-backend` to allow parallel frontend work
 - **Implementation Steps**:
   1. Ensure you're on the latest `main` or `develop` branch (or appropriate base branch)
   2. Pull latest changes: `git pull origin [base-branch]`
@@ -57,12 +57,14 @@ Detailed steps, typically:
 - **Dependencies**: Required imports
 - **Implementation Notes**: Technical details
 
-Common steps:
-- **Step 1**: Create Validation Function
-- **Step 2**: Create Service Method
-- **Step 3**: Create Controller Method
-- **Step 4**: Add Route
-- **Step 5**: Write Unit Tests (with subcategories: Successful Cases, Validation Errors, Not Found, Reference Validation, Server Errors, Edge Cases)
+Common steps (Nuxt server DDD layers):
+- **Step 1**: Valibot schema in `server/domain/schemas/`
+- **Step 2**: Domain entity update (if needed) in `server/domain/entities/`
+- **Step 3**: Repository interface update in `server/domain/repositories/`
+- **Step 4**: Prisma repository implementation in `server/infrastructure/repositories/`
+- **Step 5**: Service method in `server/services/`
+- **Step 6**: H3 API route handler in `server/api/`
+- **Step 7**: Unit tests with Vitest (service + schema; happy path, errors, edge cases)
 
 Example of a good structure:
 **Implementation Steps**:

@@ -1,531 +1,501 @@
 ---
-description: Frontend development standards, best practices, and conventions for the LTI React application including component patterns, state management, UI/UX guidelines, and testing practices
-globs: ["frontend/src/**/*.{js,jsx,ts,tsx}", "frontend/cypress/**/*.{ts,js}", "frontend/tsconfig.json", "frontend/cypress.config.ts", "frontend/package.json"]
+description: Frontend development standards for the Nuxt 4 application layer including Vue 3 SFC conventions, Pinia state management, PrimeVue 4 UI components, composables, and Playwright E2E testing.
+globs: ["app/**/*.{vue,ts}", "playwright.config.ts", "e2e/**/*.ts", "tsconfig.json"]
 alwaysApply: true
 ---
 
-# Frontend Project Configuration and Best Practices
+# Frontend Standards — Nuxt 4 + Vue 3 + Pinia + PrimeVue
 
 ## Table of Contents
 
-- [Overview](#overview)
 - [Technology Stack](#technology-stack)
-  - [Core Technologies](#core-technologies)
-  - [UI Framework](#ui-framework)
-  - [State Management & Data Flow](#state-management--data-flow)
-  - [Testing Framework](#testing-framework)
-  - [Development Tools](#development-tools)
 - [Project Structure](#project-structure)
-- [Coding Standards](#coding-standards)
-  - [Language and Naming Conventions](#language-and-naming-conventions)
-  - [Component Conventions](#component-conventions)
-  - [State Management](#state-management)
-  - [Service Layer Architecture](#service-layer-architecture)
-- [UI/UX Standards](#uiux-standards)
-  - [Bootstrap Integration](#bootstrap-integration)
+- [Vue SFC Conventions](#vue-sfc-conventions)
+  - [Script Setup](#script-setup)
+  - [Naming Conventions](#naming-conventions)
+  - [Props and Emits](#props-and-emits)
+- [Pinia State Management](#pinia-state-management)
+  - [Store Structure](#store-structure)
+  - [When to Use a Store](#when-to-use-a-store)
+- [Composables](#composables)
+  - [Data Fetching with useFetch](#data-fetching-with-usefetch)
+  - [Custom Composables](#custom-composables)
+- [PrimeVue UI Standards](#primevue-ui-standards)
+  - [Component Usage](#component-usage)
   - [Form Handling](#form-handling)
-  - [Navigation Patterns](#navigation-patterns)
-  - [Accessibility](#accessibility)
+  - [Feedback Patterns](#feedback-patterns)
+- [Routing and Navigation](#routing-and-navigation)
 - [Testing Standards](#testing-standards)
-  - [End-to-End Testing with Cypress](#end-to-end-testing-with-cypress)
-  - [Test Organization](#test-organization)
-- [Configuration Standards](#configuration-standards)
-  - [TypeScript Configuration](#typescript-configuration)
-  - [ESLint Configuration](#eslint-configuration)
-  - [Environment Configuration](#environment-configuration)
+  - [Unit Tests with Vitest](#unit-tests-with-vitest)
+  - [E2E Tests with Playwright](#e2e-tests-with-playwright)
 - [Performance Best Practices](#performance-best-practices)
-  - [Component Optimization](#component-optimization)
-  - [Bundle Optimization](#bundle-optimization)
-  - [API Efficiency](#api-efficiency)
 - [Development Workflow](#development-workflow)
-  - [Git Workflow](#git-workflow)
-  - [Development Scripts](#development-scripts)
-  - [Code Quality](#code-quality)
-- [Migration Strategy](#migration-strategy)
-  - [TypeScript Migration](#typescript-migration)
-  - [Component Modernization](#component-modernization)
 
 ---
 
-## Overview
-
-This document outlines the best practices, conventions, and standards used in the LTI frontend application. These practices ensure code consistency, maintainability, and optimal development experience.
-
 ## Technology Stack
 
-### Core Technologies
-- **React 18.3.1**: Modern React with functional components and hooks
-- **TypeScript 4.9.5**: For type safety and better development experience
-- **Create React App 5.0.1**: Build tooling and development server
-- **React Router DOM 6.23.1**: Client-side routing and navigation
+### Core
+- **Nuxt 4**: Fullstack framework — frontend runs as Vue 3 SPA/SSR/SSG
+- **Vue 3.5**: Composition API with `<script setup>` — no Options API
+- **TypeScript 5**: Strict mode, all components and composables typed
+
+### State Management
+- **Pinia**: Official Vue state management — replaces Vuex and React Context/Redux
+- **`@pinia/nuxt`**: Nuxt integration (auto-imports stores)
 
 ### UI Framework
-- **Bootstrap 5.3.3**: CSS framework for responsive design
-- **React Bootstrap 2.10.2**: Bootstrap components for React
-- **React Bootstrap Icons 1.11.4**: Icon library
-- **React DatePicker 6.9.0**: Date input components
+- **PrimeVue 4**: Component library with theme support
+- **`@primevue/nuxt-module`**: Nuxt integration (auto-imports components)
+- **`@primevue/themes`**: Design tokens and theming system
 
-### State Management & Data Flow
-- **React Hooks**: useState, useEffect for local state management
-- **React Beautiful DND 13.1.1**: Drag and drop functionality
-- **Axios**: HTTP client for API communication
+### Routing
+- **Nuxt file-based routing**: Files in `app/pages/` auto-generate routes (no react-router)
+- **`app/middleware/`**: Client-side route guards
 
-### Testing Framework
-- **Cypress 14.4.1**: End-to-end testing
-- **Jest**: Unit testing (via Create React App)
-- **React Testing Library**: Component testing utilities
+### Data Fetching
+- **`useFetch` / `useAsyncData`**: Nuxt composables for SSR-aware data fetching
+- **`$fetch`**: Raw H3 client for imperative calls (forms, mutations)
+- No Axios — use native `$fetch` from Nuxt
 
-### Development Tools
-- **ESLint**: Code linting with React-specific rules
-- **TypeScript**: Static type checking
-- **Web Vitals**: Performance monitoring
+### Testing
+- **Vitest 4 + @vue/test-utils**: Unit/component testing
+- **Playwright**: E2E testing (replaces Cypress)
+- **happy-dom**: Lightweight DOM for component tests
+
+### Validation
+- **Valibot 1**: Schema validation — shared with server schemas where possible
+
+---
 
 ## Project Structure
 
 ```
-frontend/
-├── public/                 # Static assets
-├── src/
-│   ├── components/        # Reusable UI components
-│   ├── services/         # API service layer
-│   ├── pages/           # Page components (future organization)
-│   ├── assets/          # Images, fonts, static resources
-│   ├── App.js           # Main application component
-│   ├── index.tsx        # Application entry point
-│   └── index.css        # Global styles
-├── cypress/
-│   └── e2e/            # End-to-end test files
-├── package.json         # Dependencies and scripts
-├── tsconfig.json       # TypeScript configuration
-└── cypress.config.ts   # Cypress configuration
+app/                              # Frontend (Nuxt 4 srcDir)
+├── pages/                        # File-based routing
+│   ├── index.vue                 # → /
+│   ├── users/
+│   │   ├── index.vue             # → /users
+│   │   └── [id].vue              # → /users/:id
+│   └── dashboard.vue             # → /dashboard
+│
+├── components/                   # Reusable Vue components
+│   ├── ui/                       # Generic UI (wraps PrimeVue if needed)
+│   │   └── AppButton.vue
+│   └── users/                    # Feature-specific components
+│       ├── UserCard.vue
+│       └── UserForm.vue
+│
+├── composables/                  # Auto-imported composables (like React hooks)
+│   ├── useUsers.ts               # Data fetching + business logic for users
+│   └── useAuth.ts
+│
+├── stores/                       # Pinia stores (auto-imported)
+│   ├── useUserStore.ts
+│   └── useAuthStore.ts
+│
+├── layouts/                      # Page layouts
+│   ├── default.vue               # Applied to all pages by default
+│   └── auth.vue                  # Layout for login/register pages
+│
+├── middleware/                   # Client-side route guards
+│   └── auth.ts                   # Redirect unauthenticated users
+│
+└── assets/                       # Processed assets (CSS, fonts)
+    └── css/
+        └── main.css
+
+e2e/                              # Playwright E2E tests
+tests/                            # Vitest unit/component tests
 ```
 
-## Coding Standards
+---
+
+## Vue SFC Conventions
+
+### Script Setup
+
+**Always use `<script setup lang="ts">`** — no Options API, no `defineComponent`.
+
+```vue
+<!-- app/components/users/UserCard.vue -->
+<script setup lang="ts">
+import type { User } from '~/types/user'
+
+interface Props {
+  user: User
+  compact?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  compact: false,
+})
+
+const emit = defineEmits<{
+  select: [user: User]
+  delete: [id: number]
+}>()
+
+function handleSelect() {
+  emit('select', props.user)
+}
+</script>
+
+<template>
+  <div class="user-card" :class="{ 'user-card--compact': compact }" @click="handleSelect">
+    <span>{{ user.name }}</span>
+  </div>
+</template>
+```
 
 ### Naming Conventions
 
-- **Component Naming**: Use PascalCase for React components (e.g., `CandidateCard`, `PositionDetails`, `RecruiterDashboard`)
-- **Variable Naming**: Use camelCase for variables and functions (e.g., `candidateId`, `handleSubmit`, `fetchPositions`)
-- **Constants Naming**: Use UPPER_SNAKE_CASE for constants (e.g., `MAX_CANDIDATES_PER_PAGE`, `API_BASE_URL`)
-- **Type/Interface Naming**: Use PascalCase for types and interfaces (e.g., `CandidateData`, `PositionProps`, `ICandidateService`)
-- **File Naming**: Use PascalCase for component files (e.g., `CandidateCard.tsx`, `PositionDetails.tsx`) and camelCase for utility files (e.g., `candidateService.js`, `apiUtils.ts`)
-- **CSS Class Naming**: Use kebab-case for CSS classes (e.g., `candidate-card`, `position-details`)
-- **Hook Naming**: Use camelCase starting with "use" prefix (e.g., `useCandidate`, `usePositionData`, `useFormValidation`)
+| Element | Convention | Example |
+|---|---|---|
+| Component files | PascalCase | `UserCard.vue`, `AppButton.vue` |
+| Page files | kebab-case | `user-detail.vue` |
+| Composables | camelCase + `use` prefix | `useUsers.ts`, `useAuth.ts` |
+| Pinia stores | camelCase + `use` prefix | `useUserStore.ts` |
+| Variables / functions | camelCase | `userId`, `fetchUsers()` |
+| Constants | UPPER_SNAKE_CASE | `MAX_PAGE_SIZE` |
+| Types / Interfaces | PascalCase | `User`, `UserCreateInput` |
 
-**Examples:**
+### Props and Emits
+
+- Define props with TypeScript generics — never use runtime validators alone
+- Use `withDefaults` for optional props
+- Use typed `defineEmits` generic syntax
 
 ```typescript
-// Good: All in English
-import React, { useState, useEffect } from 'react';
+// Good
+const props = withDefaults(defineProps<{ label: string; disabled?: boolean }>(), {
+  disabled: false,
+})
 
-type CandidateCardProps = {
-    candidate: Candidate;
-    index: number;
-    onClick: (candidate: Candidate) => void;
-};
-
-const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, index, onClick }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    
-    // Handle candidate card click event
-    const handleCardClick = () => {
-        onClick(candidate);
-    };
-    
-    return (
-        <div className="candidate-card" onClick={handleCardClick}>
-            {/* Component JSX */}
-        </div>
-    );
-};
-
-// Avoid: Non-English comments or names
-const TarjetaCandidato: React.FC<PropsTarjetaCandidato> = ({ candidato, indice, alHacerClic }) => {
-    const [estaCargando, setEstaCargando] = useState(false);
-    
-    // Manejar evento de clic en la tarjeta de candidato
-    const manejarClicTarjeta = () => {
-        alHacerClic(candidato);
-    };
-    
-    return (
-        <div className="tarjeta-candidato" onClick={manejarClicTarjeta}>
-            {/* JSX del componente */}
-        </div>
-    );
-};
+// Avoid — untyped
+const props = defineProps(['label', 'disabled'])
 ```
 
-**Error Messages and Console Logs:**
+---
+
+## Pinia State Management
+
+### Store Structure
+
+Use the **Setup Store** syntax (Composition API style) — not the Options Store.
 
 ```typescript
-// Good: English error messages
-catch (error) {
-    console.error('Failed to fetch candidates:', error);
-    setError('Unable to load candidates. Please try again later.');
-}
+// app/stores/useUserStore.ts
+import { defineStore } from 'pinia'
+import type { User } from '~/types/user'
 
-// Avoid: Non-English messages
-catch (error) {
-    console.error('Error al obtener candidatos:', error);
-    setError('No se pudieron cargar los candidatos. Por favor, inténtelo de nuevo más tarde.');
-}
-```
+export const useUserStore = defineStore('users', () => {
+  // State
+  const users = ref<User[]>([])
+  const selectedUser = ref<User | null>(null)
+  const loading = ref(false)
 
-**Service Layer Examples:**
+  // Getters
+  const activeUsers = computed(() =>
+    users.value.filter((u) => !u.deletedAt)
+  )
 
-```typescript
-// Good: English naming in services
-export const candidateService = {
-    getAllCandidates: async () => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/candidates`);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching candidates:', error);
-            throw error;
-        }
+  // Actions
+  async function fetchAll() {
+    loading.value = true
+    try {
+      users.value = await $fetch('/api/users')
+    } finally {
+      loading.value = false
     }
-};
+  }
 
-// Avoid: Non-English naming
-export const servicioCandidatos = {
-    obtenerTodosLosCandidatos: async () => {
-        try {
-            const respuesta = await axios.get(`${API_BASE_URL}/candidates`);
-            return respuesta.data;
-        } catch (error) {
-            console.error('Error al obtener candidatos:', error);
-            throw error;
-        }
-    }
-};
+  async function createUser(data: { name: string; email: string }) {
+    const created = await $fetch('/api/users', { method: 'POST', body: data })
+    users.value.push(created)
+    return created
+  }
+
+  return { users, selectedUser, loading, activeUsers, fetchAll, createUser }
+})
 ```
 
-### Component Conventions
+### When to Use a Store
 
-#### Functional Components
-- **Always use functional components** with hooks instead of class components
-- Use **TypeScript for new components** when possible
-- Keep **JavaScript for legacy components** until migration
+| Use a store | Use a composable |
+|---|---|
+| Data shared across multiple pages | Data local to one component or route |
+| Global UI state (auth, notifications) | One-off async calls |
+| Cached server data used in many places | Component-level loading/error state |
+
+---
+
+## Composables
+
+### Data Fetching with useFetch
+
+Prefer `useFetch` / `useAsyncData` for SSR-aware fetching in pages and layouts.
 
 ```typescript
-// Preferred - TypeScript functional component
-import React, { useState, useEffect } from 'react';
-
-type Position = {
-    id: number;
-    title: string;
-    status: 'Open' | 'Contratado' | 'Cerrado' | 'Borrador';
-};
-
-const Positions: React.FC = () => {
-    const [positions, setPositions] = useState<Position[]>([]);
-    // Component logic
-};
+// app/pages/users/index.vue
+<script setup lang="ts">
+const { data: users, pending, error } = await useFetch('/api/users', {
+  default: () => [],
+})
+</script>
 ```
 
-#### Component Props
-- **Define TypeScript interfaces** for component props when using TypeScript
-- Use **destructuring** for props
-- Include **default values** where appropriate
+Use `$fetch` for imperative calls (form submissions, deletions):
 
 ```typescript
-type CandidateCardProps = {
-    candidate: Candidate;
-    index: number;
-    onClick: (candidate: Candidate) => void;
-};
-
-const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, index, onClick }) => {
-    // Component implementation
-};
-```
-
-### State Management
-
-#### Local State with Hooks
-- Use **useState** for component-level state
-- Use **useEffect** for side effects and data fetching
-- **Extract custom hooks** for reusable stateful logic
-
-```javascript
-const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    status: 'Borrador'
-});
-
-const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-        ...prev,
-        [name]: value
-    }));
-};
-```
-
-#### Loading and Error States
-- **Always handle loading states** for async operations
-- **Implement error handling** with user-friendly messages
-- **Use React Bootstrap Alert** components for feedback
-
-```javascript
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState('');
-const [success, setSuccess] = useState('');
-
-// In async function
-try {
-    setLoading(true);
-    const data = await apiCall();
-    setSuccess('Operation completed successfully');
-} catch (error) {
-    setError('Error message: ' + error.message);
-} finally {
-    setLoading(false);
+async function deleteUser(id: number) {
+  await $fetch(`/api/users/${id}`, { method: 'DELETE' })
+  await refresh() // from useFetch
 }
 ```
 
-### Service Layer Architecture
+### Custom Composables
 
-#### API Services
-- **Centralize API calls** in service files
-- Use **axios** for HTTP requests
-- **Export service objects** with grouped methods
-- **Handle errors at service level** when appropriate
+Extract reusable logic — composables are the Vue equivalent of React custom hooks.
 
-```javascript
-import axios from 'axios';
+```typescript
+// app/composables/useUsers.ts
+export function useUsers() {
+  const store = useUserStore()
+  const toast = useToast() // PrimeVue toast composable
 
-const API_BASE_URL = 'http://localhost:3010';
-
-export const positionService = {
-    getAllPositions: async () => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/positions`);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching positions:', error);
-            throw error;
-        }
-    },
-    
-    updatePosition: async (id, positionData) => {
-        try {
-            const response = await axios.put(`${API_BASE_URL}/positions/${id}`, positionData);
-            return response.data;
-        } catch (error) {
-            console.error('Error updating position:', error);
-            throw error;
-        }
+  async function removeUser(id: number) {
+    try {
+      await $fetch(`/api/users/${id}`, { method: 'DELETE' })
+      store.users = store.users.filter((u) => u.id !== id)
+      toast.add({ severity: 'success', summary: 'User deleted', life: 3000 })
+    } catch {
+      toast.add({ severity: 'error', summary: 'Failed to delete user', life: 5000 })
     }
-};
+  }
+
+  return { removeUser }
+}
 ```
 
-## UI/UX Standards
+---
 
-### Bootstrap Integration
-- Use **React Bootstrap components** instead of plain Bootstrap
-- **Import Bootstrap CSS** in the main App component
-- Follow **Bootstrap responsive grid system** (Container, Row, Col)
+## PrimeVue UI Standards
 
-```javascript
-import { Container, Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+### Component Usage
+
+PrimeVue components are auto-imported via `@primevue/nuxt-module`. No manual imports needed.
+
+```vue
+<template>
+  <!-- Use PrimeVue components directly -->
+  <DataTable :value="users" :loading="pending" paginator :rows="10">
+    <Column field="name" header="Name" sortable />
+    <Column field="email" header="Email" />
+    <Column header="Actions">
+      <template #body="{ data }">
+        <Button icon="pi pi-trash" severity="danger" @click="removeUser(data.id)" />
+      </template>
+    </Column>
+  </DataTable>
+</template>
 ```
+
+Rules:
+- Check PrimeVue documentation before writing a custom component — it likely already exists
+- Do not install other UI libraries (Bootstrap, Vuetify, etc.) without justification
+- Wrap PrimeVue components in `app/components/ui/` only when you need repeated customization
 
 ### Form Handling
-- Use **controlled components** for form inputs
-- Implement **real-time validation** where appropriate
-- **Disable submit buttons** during form submission
-- **Clear form state** after successful submission
 
-```javascript
-<Form onSubmit={handleSubmit}>
-    <Form.Group className="mb-3">
-        <Form.Label>Title *</Form.Label>
-        <Form.Control
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            required
-        />
-    </Form.Group>
-    <Button type="submit" disabled={saving}>
-        {saving ? 'Saving...' : 'Save'}
-    </Button>
-</Form>
+```vue
+<script setup lang="ts">
+import { parse, ValiError } from 'valibot'
+import { CreateUserSchema } from '~/shared/schemas/userSchemas'
+
+const form = reactive({ name: '', email: '' })
+const errors = ref<Record<string, string>>({})
+const saving = ref(false)
+
+async function handleSubmit() {
+  errors.value = {}
+  try {
+    const validated = parse(CreateUserSchema, form)
+    saving.value = true
+    await $fetch('/api/users', { method: 'POST', body: validated })
+    navigateTo('/users')
+  } catch (error) {
+    if (error instanceof ValiError) {
+      // Map Valibot issues to field errors
+      error.issues.forEach((issue) => {
+        if (issue.path) errors.value[issue.path[0].key as string] = issue.message
+      })
+    }
+  } finally {
+    saving.value = false
+  }
+}
+</script>
+
+<template>
+  <form @submit.prevent="handleSubmit">
+    <div class="field">
+      <label for="name">Name *</label>
+      <InputText id="name" v-model="form.name" :invalid="!!errors.name" />
+      <small v-if="errors.name" class="p-error">{{ errors.name }}</small>
+    </div>
+
+    <Button type="submit" label="Save" :loading="saving" />
+  </form>
+</template>
 ```
 
-### Navigation Patterns
-- Use **React Router** for all navigation
-- **Implement breadcrumbs** with back navigation
-- Use **programmatic navigation** with useNavigate hook
+### Feedback Patterns
 
-```javascript
-import { useNavigate } from 'react-router-dom';
+```typescript
+// Toast notifications (use PrimeVue's useToast)
+const toast = useToast()
+toast.add({ severity: 'success', summary: 'Saved', detail: 'User created successfully', life: 3000 })
+toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to save user', life: 5000 })
 
-const navigate = useNavigate();
-
-// Navigation examples
-<Button variant="link" onClick={() => navigate('/')}>
-    ← Back to Dashboard
-</Button>
+// Confirmation dialog (use PrimeVue's useConfirm)
+const confirm = useConfirm()
+confirm.require({
+  message: 'Are you sure you want to delete this user?',
+  header: 'Confirm deletion',
+  accept: () => removeUser(id),
+})
 ```
 
-### Accessibility
-- Include **aria-label** attributes for interactive elements
-- Use **semantic HTML** elements
-- Ensure **keyboard navigation** support
-- Provide **alternative text** for images
+---
 
-```javascript
-<Form.Control 
-    type="text" 
-    placeholder="Search by title" 
-    aria-label="Search positions by title"
-/>
+## Routing and Navigation
+
+Nuxt uses file-based routing — no `router.ts` to maintain.
+
 ```
+app/pages/users/index.vue     →  /users
+app/pages/users/[id].vue      →  /users/:id
+app/pages/users/[id]/edit.vue →  /users/:id/edit
+```
+
+Navigation in templates and scripts:
+
+```vue
+<template>
+  <!-- Template navigation -->
+  <NuxtLink to="/users">Back to users</NuxtLink>
+  <NuxtLink :to="`/users/${user.id}`">View user</NuxtLink>
+</template>
+
+<script setup lang="ts">
+// Programmatic navigation
+await navigateTo('/users')
+await navigateTo({ path: '/users', query: { page: 2 } })
+
+// Current route
+const route = useRoute()
+const userId = route.params.id
+</script>
+```
+
+Route middleware (client guards):
+
+```typescript
+// app/middleware/auth.ts
+export default defineNuxtRouteMiddleware(() => {
+  const authStore = useAuthStore()
+  if (!authStore.isAuthenticated) return navigateTo('/login')
+})
+```
+
+Apply to a page: `definePageMeta({ middleware: 'auth' })`
+
+---
 
 ## Testing Standards
 
-### End-to-End Testing with Cypress
-- **Test user workflows** rather than implementation details
-- Use **data-testid** attributes for reliable element selection
-- **Organize tests by feature** (candidates.cy.ts, positions.cy.ts)
-- **Include API testing** alongside UI testing
+### Unit Tests with Vitest
 
 ```typescript
-describe('Positions API - Update', () => {
-    beforeEach(() => {
-        cy.window().then((win) => {
-            win.localStorage.clear();
-        });
-    });
+// tests/components/UserCard.test.ts
+import { mount } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
+import UserCard from '~/app/components/users/UserCard.vue'
 
-    it('should update a position successfully', () => {
-        const updateData = {
-            title: 'Updated Test Position',
-            status: 'Open'
-        };
+describe('UserCard', () => {
+  it('renders the user name', () => {
+    const wrapper = mount(UserCard, {
+      props: { user: { id: 1, name: 'Alice', email: 'alice@test.com' } },
+    })
+    expect(wrapper.text()).toContain('Alice')
+  })
 
-        cy.request({
-            method: 'PUT',
-            url: `${API_URL}/positions/${testPositionId}`,
-            body: updateData
-        }).then((response) => {
-            expect(response.status).to.eq(200);
-            expect(response.body.data.title).to.eq(updateData.title);
-        });
-    });
-});
+  it('emits select event on click', async () => {
+    const user = { id: 1, name: 'Alice', email: 'alice@test.com' }
+    const wrapper = mount(UserCard, { props: { user } })
+
+    await wrapper.trigger('click')
+
+    expect(wrapper.emitted('select')?.[0]).toEqual([user])
+  })
+})
 ```
 
-### Test Organization
-- **Group related tests** with describe blocks
-- **Use descriptive test names** that explain the expected behavior
-- **Test both success and error scenarios**
-- **Include edge cases** and validation testing
+### E2E Tests with Playwright
 
-## Configuration Standards
+```typescript
+// e2e/users.spec.ts
+import { test, expect } from '@playwright/test'
 
-### TypeScript Configuration
-- Enable **strict mode** for type checking
-- Use **path mapping** with "@/*" for cleaner imports
-- Include **both Cypress and Node types**
-- Configure **ES5 target** for broader compatibility
+test.describe('Users', () => {
+  test('shows user list on /users', async ({ page }) => {
+    await page.goto('/users')
+    await expect(page.getByRole('table')).toBeVisible()
+  })
 
-```json
-{
-    "compilerOptions": {
-        "strict": true,
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        },
-        "types": ["cypress", "node"]
-    }
-}
+  test('creates a new user', async ({ page }) => {
+    await page.goto('/users/new')
+    await page.getByLabel('Name').fill('Alice Smith')
+    await page.getByLabel('Email').fill('alice@test.com')
+    await page.getByRole('button', { name: 'Save' }).click()
+
+    await expect(page).toHaveURL('/users')
+    await expect(page.getByText('Alice Smith')).toBeVisible()
+  })
+})
 ```
 
-### ESLint Configuration
-- Extend **React App** configuration
-- Include **Jest rules** for testing
-- **Automatic code formatting** and error detection
-- **Consistent code style** across the project
+Rules:
+- Use `data-testid` attributes for elements with no accessible label
+- Test user journeys, not implementation details
+- Co-locate E2E tests by feature in `e2e/`
+- Test both happy path and error scenarios
 
-### Environment Configuration
-- Use **environment variables** for API URLs
-- **Separate configurations** for development and production
-- **Configure Cypress** with environment-specific settings
-
-```javascript
-// cypress.config.ts
-export default defineConfig({
-    e2e: {
-        baseUrl: 'http://localhost:3000',
-        env: {
-            API_URL: 'http://localhost:3010'
-        }
-    }
-});
-```
+---
 
 ## Performance Best Practices
 
-### Component Optimization
-- **Lazy load** components when appropriate
-- **Memoize expensive calculations** with useMemo
-- **Avoid unnecessary re-renders** with useCallback
-- **Extract reusable logic** into custom hooks
+- **SSR by default**: Nuxt renders pages server-side — avoid `window`/`document` in setup without `onMounted`
+- **Lazy components**: Use `<LazyComponent>` prefix for components not needed on initial render
+- **`useFetch` caching**: Nuxt deduplicates requests automatically — use consistent cache keys
+- **Pinia store hydration**: Server state is hydrated to client automatically with `@pinia/nuxt`
+- **Avoid `watch` with immediate**: Prefer `computed` for derived state; `watch` for side effects only
 
-### Bundle Optimization
-- **Tree shaking** enabled through Create React App
-- **Code splitting** at route level
-- **Optimize images** and static assets
-- **Monitor bundle size** with build tools
-
-### API Efficiency
-- **Implement proper error handling** for network requests
-- **Cache API responses** where appropriate
-- **Use loading states** to improve perceived performance
-- **Batch API calls** when possible
+---
 
 ## Development Workflow
 
-- **Feature Branches**: Develop features in separate branches, adding descriptive suffix "-frontend" to allow working in parallel and avoid conflicts or collisions
-- **Descriptive Commits**: Write descriptive commit messages in English
-- **Code Review**: Code review before merging
-- **Small Branches**: Keep branches small and focused
+- **Feature branches**: `feature/GH-N-frontend` — suffix `-frontend` to allow parallel backend work
+- **Commits**: Descriptive English — `Add user list page with PrimeVue DataTable`
+- **Scripts**:
 
-### Development Scripts
 ```bash
-npm start          # Development server
-npm test           # Run unit tests
-npm run build      # Production build
-npm run cypress:open    # Open Cypress test runner
-npm run cypress:run     # Run Cypress tests headlessly
+npm run dev            # Start Nuxt dev server (port 3000)
+npm test               # Vitest unit tests
+npm run test:watch     # Watch mode
+npm run test:e2e       # Playwright E2E tests
+npm run typecheck      # vue-tsc type check
+npm run lint           # ESLint
+npm run lint:fix       # Auto-fix lint errors
 ```
-
-### Code Quality
-- **ESLint validation** before commits
-- **TypeScript compilation** without errors
-- **All tests passing** before deployment
-- **Performance monitoring** with Web Vitals
-
-## Migration Strategy
-
-### TypeScript Migration
-- **Gradual migration** from JavaScript to TypeScript
-- **New components in TypeScript** by default
-- **Maintain existing JavaScript** components until planned refactor
-- **Add types incrementally** to existing code
-
-### Component Modernization
-- **Functional components** over class components
-- **Hooks** instead of lifecycle methods
-- **React Bootstrap** components for consistency
-- **Responsive design** principles throughout
-
-This document serves as the foundation for maintaining code quality and consistency across the LTI frontend application. All team members should follow these practices to ensure a maintainable and scalable codebase.

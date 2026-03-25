@@ -1,37 +1,60 @@
 openapi: 3.0.0
 info:
-  title: LTI (Learning Technology Initiative) API
+  title: "{Your App Name} API"
   description: |
-    REST API for the Learning Technology Initiative platform, designed for managing candidates, positions, interviews, and recruitment processes.
-    
-    This API follows Domain-Driven Design principles and implements a layered architecture for scalable recruitment management.
-    
-    ## Features
-    - Candidate management with education and work experience tracking
-    - Position management with company and interview flow integration
-    - Application tracking through interview processes
-    - File upload capabilities for resumes and documents
-    - Comprehensive filtering, sorting, and pagination support
-    
-  version: 0.0.0.001
+    REST API served by the Nuxt 4 server layer (Nitro/H3).
+
+    All routes are prefixed with `/api/` as per Nuxt convention.
+    Routes are defined as files under `server/api/` and auto-registered by Nitro.
+
+    ## Conventions
+    - All responses wrapped in `{ data: ... }` for single resources
+    - Collections return `{ data: [...], meta: { total, page, limit } }`
+    - Errors follow H3 `createError()` format: `{ statusCode, statusMessage, data? }`
+    - All endpoints require authentication unless marked as public
+
+  version: 1.0.0
   contact:
-    name: LTI Development Team
-  license:
-    name: ISC
-    
+    name: Development Team
+
 servers:
   - url: http://localhost:3000
-    description: Development server
-  - url: https://api.lti.dev
-    description: Production server
+    description: Development (Nuxt dev server — frontend + API unified)
+  - url: https://your-app.com
+    description: Production
+
+# ─────────────────────────────────────────────
+# Replace the example paths below with your own
+# endpoints as you build them.
+# ─────────────────────────────────────────────
 
 paths:
-  /candidates:
+
+  # ── Health check ──────────────────────────
+  /api/health:
     get:
-      summary: Get all candidates
-      description: Retrieve a paginated list of candidates with optional filtering and sorting capabilities
+      summary: Health check
+      description: Returns 200 if the server is running. Used by CI and load balancers.
       tags:
-        - Candidates
+        - Health
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  # ── Example resource: Users ───────────────
+  /api/users:
+    get:
+      summary: List users
+      tags:
+        - Users
       parameters:
         - in: query
           name: page
@@ -39,7 +62,6 @@ paths:
             type: integer
             minimum: 1
             default: 1
-          description: Page number for pagination
         - in: query
           name: limit
           schema:
@@ -47,1047 +69,233 @@ paths:
             minimum: 1
             maximum: 100
             default: 10
-          description: Number of candidates per page
         - in: query
           name: search
           schema:
             type: string
-          description: Search term to filter candidates by first name, last name, or email
-        - in: query
-          name: sort
-          schema:
-            type: string
-            enum: [firstName, lastName, email]
-            default: firstName
-          description: Field to sort candidates by
-        - in: query
-          name: order
-          schema:
-            type: string
-            enum: [asc, desc]
-            default: asc
-          description: Sort order
+          description: Filter by name or email
       responses:
         '200':
-          description: Successfully retrieved candidates
+          description: Paginated user list
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CandidateListResponse'
-        '400':
-          description: Invalid request parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
     post:
-      summary: Create a new candidate
-      description: Add a new candidate to the system with their personal information, education, and work experience
+      summary: Create user
       tags:
-        - Candidates
+        - Users
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCandidateRequest'
+              $ref: '#/components/schemas/CreateUserInput'
       responses:
         '201':
-          description: Candidate created successfully
+          description: User created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateCandidateResponse'
-        '400':
-          description: Validation error or email already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/Conflict'
 
-  /candidates/{id}:
+  /api/users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+
     get:
-      summary: Get candidate by ID
-      description: Retrieve detailed information about a specific candidate including their applications, interviews, and related data
+      summary: Get user by ID
       tags:
-        - Candidates
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Candidate ID
+        - Users
       responses:
         '200':
-          description: Successfully retrieved candidate
+          description: User found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CandidateDetails'
-        '400':
-          description: Invalid ID format
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
         '404':
-          description: Candidate not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    
+          $ref: '#/components/responses/NotFound'
+
     put:
-      summary: Update candidate interview stage
-      description: Update the current interview stage for a candidate's application
+      summary: Update user
       tags:
-        - Candidates
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Candidate ID
+        - Users
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCandidateStageRequest'
+              $ref: '#/components/schemas/UpdateUserInput'
       responses:
         '200':
-          description: Candidate stage updated successfully
+          description: User updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateCandidateStageResponse'
-        '400':
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
         '404':
-          description: Application not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 
-  /positions:
-    get:
-      summary: Get all positions
-      description: Retrieve all visible positions in the system
+    delete:
+      summary: Delete user (soft delete)
       tags:
-        - Positions
+        - Users
       responses:
-        '200':
-          description: Successfully retrieved positions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Position'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /positions/{id}:
-    get:
-      summary: Get position by ID
-      description: Retrieve detailed information about a specific position
-      tags:
-        - Positions
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Position ID
-      responses:
-        '200':
-          description: Successfully retrieved position
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Position'
-        '400':
-          description: Invalid position ID format
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '204':
+          description: User deleted
         '404':
-          description: Position not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    
-    put:
-      summary: Update position
-      description: |
-        Update an existing position with new information. Supports partial updates - only fields provided in the request body will be updated.
-        Fields not provided will maintain their existing values in the database.
-      tags:
-        - Positions
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Position ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdatePositionRequest'
-      responses:
-        '200':
-          description: Position updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdatePositionResponse'
-        '400':
-          description: Validation error or invalid reference data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Position not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
-  /positions/{id}/candidates:
-    get:
-      summary: Get candidates by position
-      description: Retrieve all candidates who have applied to a specific position with their interview progress
-      tags:
-        - Positions
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Position ID
-      responses:
-        '200':
-          description: Successfully retrieved candidates for position
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PositionCandidate'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /positions/{id}/candidates/names:
-    get:
-      summary: Get candidate names by position
-      description: Retrieve simplified candidate information (ID and name only) for a specific position
-      tags:
-        - Positions
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Position ID
-      responses:
-        '200':
-          description: Successfully retrieved candidate names
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CandidateName'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /positions/{id}/interviewflow:
-    get:
-      summary: Get interview flow by position
-      description: Retrieve the interview flow configuration for a specific position
-      tags:
-        - Positions
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-          description: Position ID
-      responses:
-        '200':
-          description: Successfully retrieved interview flow
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InterviewFlowResponse'
-        '404':
-          description: Position not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /upload:
-    post:
-      summary: Upload file
-      description: Upload a file (PDF or DOCX) for resume or document storage
-      tags:
-        - File Upload
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-                  description: File to upload (PDF or DOCX, max 10MB)
-              required:
-                - file
-      responses:
-        '200':
-          description: File uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileUploadResponse'
-        '400':
-          description: Invalid file type or file too large
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Upload error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
+# ─────────────────────────────────────────────
 components:
   schemas:
-    CandidateListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Candidate'
-        metadata:
-          $ref: '#/components/schemas/PaginationMetadata'
-      required:
-        - data
-        - metadata
 
-    Candidate:
+    User:
       type: object
       properties:
         id:
           type: integer
-          description: Unique candidate identifier
-        firstName:
-          type: string
-          description: Candidate's first name
-        lastName:
-          type: string
-          description: Candidate's last name
-        email:
-          type: string
-          format: email
-          description: Candidate's email address
-        phone:
-          type: string
-          nullable: true
-          description: Candidate's phone number
-        address:
-          type: string
-          nullable: true
-          description: Candidate's address
-        educations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Education'
-        workExperiences:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkExperience'
-        resumes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Resume'
-        applications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Application'
-      required:
-        - firstName
-        - lastName
-        - email
-
-    CandidateDetails:
-      allOf:
-        - $ref: '#/components/schemas/Candidate'
-        - type: object
-          properties:
-            applications:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/Application'
-                  - type: object
-                    properties:
-                      position:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          title:
-                            type: string
-                      interviews:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Interview'
-
-    CreateCandidateRequest:
-      type: object
-      properties:
-        firstName:
-          type: string
-          description: Candidate's first name
-        lastName:
-          type: string
-          description: Candidate's last name
-        email:
-          type: string
-          format: email
-          description: Candidate's email address
-        phone:
-          type: string
-          nullable: true
-          description: Candidate's phone number
-        address:
-          type: string
-          nullable: true
-          description: Candidate's address
-        educations:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateEducationRequest'
-        workExperiences:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateWorkExperienceRequest'
-        cv:
-          $ref: '#/components/schemas/CreateResumeRequest'
-      required:
-        - firstName
-        - lastName
-        - email
-
-    CreateCandidateResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Created candidate ID
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-          nullable: true
-        address:
-          type: string
-          nullable: true
-      required:
-        - id
-        - firstName
-        - lastName
-        - email
-
-    UpdateCandidateStageRequest:
-      type: object
-      properties:
-        applicationId:
-          type: string
-          description: Application ID (will be converted to integer)
-        currentInterviewStep:
-          type: string
-          description: Current interview step (will be converted to integer)
-      required:
-        - applicationId
-        - currentInterviewStep
-
-    UpdateCandidateStageResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Candidate stage updated successfully"
-        data:
-          $ref: '#/components/schemas/Application'
-
-    Position:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Position unique identifier
-        companyId:
-          type: integer
-          description: Associated company ID
-        interviewFlowId:
-          type: integer
-          description: Associated interview flow ID
-        title:
-          type: string
-          description: Position title
-        description:
-          type: string
-          description: Position description
-        status:
-          type: string
-          description: Position status
-          default: "Draft"
-        isVisible:
-          type: boolean
-          description: Whether position is visible to candidates
-          default: false
-        location:
-          type: string
-          description: Position location
-        jobDescription:
-          type: string
-          description: Detailed job description
-        requirements:
-          type: string
-          nullable: true
-          description: Position requirements
-        responsibilities:
-          type: string
-          nullable: true
-          description: Position responsibilities
-        salaryMin:
-          type: number
-          nullable: true
-          description: Minimum salary
-        salaryMax:
-          type: number
-          nullable: true
-          description: Maximum salary
-        employmentType:
-          type: string
-          nullable: true
-          description: Type of employment
-        benefits:
-          type: string
-          nullable: true
-          description: Position benefits
-        companyDescription:
-          type: string
-          nullable: true
-          description: Company description
-        applicationDeadline:
-          type: string
-          format: date-time
-          nullable: true
-          description: Application deadline
-        contactInfo:
-          type: string
-          nullable: true
-          description: Contact information
-      required:
-        - companyId
-        - interviewFlowId
-        - title
-        - description
-        - location
-        - jobDescription
-
-    UpdatePositionRequest:
-      type: object
-      properties:
-        companyId:
-          type: integer
-          minimum: 1
-          description: Associated company ID (must be a positive integer)
-        interviewFlowId:
-          type: integer
-          minimum: 1
-          description: Associated interview flow ID (must be a positive integer)
-        title:
-          type: string
-          maxLength: 100
-          minLength: 1
-          description: Position title (required, 1-100 characters)
-        description:
-          type: string
-          minLength: 1
-          description: Position description (required, cannot be empty)
-        status:
-          type: string
-          enum: [Open, Contratado, Cerrado, Borrador]
-          description: Position status (must be one of the valid status values)
-        isVisible:
-          type: boolean
-          description: Whether position is visible to candidates
-        location:
-          type: string
-          minLength: 1
-          description: Position location (required, cannot be empty)
-        jobDescription:
-          type: string
-          minLength: 1
-          description: Detailed job description (required, cannot be empty)
-        requirements:
-          type: string
-          nullable: true
-          description: Position requirements
-        responsibilities:
-          type: string
-          nullable: true
-          description: Position responsibilities
-        salaryMin:
-          type: number
-          minimum: 0
-          nullable: true
-          description: Minimum salary (must be >= 0, cannot be greater than salaryMax)
-        salaryMax:
-          type: number
-          minimum: 0
-          nullable: true
-          description: Maximum salary (must be >= 0, cannot be less than salaryMin)
-        employmentType:
-          type: string
-          nullable: true
-          description: Type of employment
-        benefits:
-          type: string
-          nullable: true
-          description: Position benefits
-        companyDescription:
-          type: string
-          nullable: true
-          description: Company description
-        applicationDeadline:
-          type: string
-          format: date-time
-          nullable: true
-          description: Application deadline (must be a future date)
-        contactInfo:
-          type: string
-          nullable: true
-          description: Contact information
-
-    UpdatePositionResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Position updated successfully"
-        data:
-          $ref: '#/components/schemas/Position'
-
-    PositionCandidate:
-      type: object
-      properties:
-        fullName:
-          type: string
-          description: Candidate's full name
-        currentInterviewStep:
-          type: string
-          description: Current interview step name
-        candidateId:
-          type: integer
-          description: Candidate ID
-        applicationId:
-          type: integer
-          description: Application ID
-        averageScore:
-          type: number
-          description: Average interview score
-      required:
-        - fullName
-        - currentInterviewStep
-        - candidateId
-        - applicationId
-        - averageScore
-
-    CandidateName:
-      type: object
-      properties:
-        candidateId:
-          type: integer
-          description: Candidate ID
-        fullName:
-          type: string
-          description: Candidate's full name
-      required:
-        - candidateId
-        - fullName
-
-    InterviewFlowResponse:
-      type: object
-      properties:
-        interviewFlow:
-          type: object
-          properties:
-            positionName:
-              type: string
-              description: Position title
-            interviewFlow:
-              $ref: '#/components/schemas/InterviewFlow'
-
-    InterviewFlow:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Interview flow ID
-        description:
-          type: string
-          description: Interview flow description
-        interviewSteps:
-          type: array
-          items:
-            $ref: '#/components/schemas/InterviewStep'
-
-    InterviewStep:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Interview step ID
-        interviewFlowId:
-          type: integer
-          description: Associated interview flow ID
-        interviewTypeId:
-          type: integer
-          description: Associated interview type ID
+          example: 1
         name:
           type: string
-          description: Interview step name
-        orderIndex:
-          type: integer
-          description: Step order in the interview flow
+          example: Alice Smith
+        email:
+          type: string
+          format: email
+          example: alice@example.com
+        createdAt:
+          type: string
+          format: date-time
 
-    Education:
+    CreateUserInput:
       type: object
-      properties:
-        id:
-          type: integer
-          description: Education record ID
-        candidateId:
-          type: integer
-          description: Associated candidate ID
-        institution:
-          type: string
-          description: Educational institution name
-        title:
-          type: string
-          description: Degree or certification title
-        startDate:
-          type: string
-          format: date-time
-          description: Education start date
-        endDate:
-          type: string
-          format: date-time
-          nullable: true
-          description: Education end date
       required:
-        - institution
-        - title
-        - startDate
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Alice Smith
+        email:
+          type: string
+          format: email
+          example: alice@example.com
 
-    CreateEducationRequest:
+    UpdateUserInput:
       type: object
       properties:
-        institution:
+        name:
           type: string
-          description: Educational institution name
-        title:
+          minLength: 2
+          maxLength: 100
+        email:
           type: string
-          description: Degree or certification title
-        startDate:
-          type: string
-          format: date-time
-          description: Education start date
-        endDate:
-          type: string
-          format: date-time
-          nullable: true
-          description: Education end date
-      required:
-        - institution
-        - title
-        - startDate
+          format: email
 
-    WorkExperience:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Work experience record ID
-        candidateId:
-          type: integer
-          description: Associated candidate ID
-        company:
-          type: string
-          description: Company name
-        position:
-          type: string
-          description: Job position title
-        description:
-          type: string
-          nullable: true
-          description: Job description
-        startDate:
-          type: string
-          format: date-time
-          description: Employment start date
-        endDate:
-          type: string
-          format: date-time
-          nullable: true
-          description: Employment end date
-      required:
-        - company
-        - position
-        - startDate
-
-    CreateWorkExperienceRequest:
-      type: object
-      properties:
-        company:
-          type: string
-          description: Company name
-        position:
-          type: string
-          description: Job position title
-        description:
-          type: string
-          nullable: true
-          description: Job description
-        startDate:
-          type: string
-          format: date-time
-          description: Employment start date
-        endDate:
-          type: string
-          format: date-time
-          nullable: true
-          description: Employment end date
-      required:
-        - company
-        - position
-        - startDate
-
-    Resume:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Resume record ID
-        candidateId:
-          type: integer
-          description: Associated candidate ID
-        filePath:
-          type: string
-          description: Resume file path
-        fileType:
-          type: string
-          description: Resume file MIME type
-      required:
-        - filePath
-        - fileType
-
-    CreateResumeRequest:
-      type: object
-      properties:
-        filePath:
-          type: string
-          description: Resume file path
-        fileType:
-          type: string
-          description: Resume file MIME type
-      required:
-        - filePath
-        - fileType
-
-    Application:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Application ID
-        candidateId:
-          type: integer
-          description: Associated candidate ID
-        positionId:
-          type: integer
-          description: Associated position ID
-        applicationDate:
-          type: string
-          format: date-time
-          description: Application submission date
-        currentInterviewStep:
-          type: integer
-          description: Current interview step ID
-        notes:
-          type: string
-          nullable: true
-          description: Application notes
-
-    Interview:
-      type: object
-      properties:
-        interviewDate:
-          type: string
-          format: date-time
-          description: Interview date and time
-        interviewStep:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Interview step name
-        notes:
-          type: string
-          nullable: true
-          description: Interview notes
-        score:
-          type: number
-          nullable: true
-          description: Interview score
-
-    FileUploadResponse:
-      type: object
-      properties:
-        filePath:
-          type: string
-          description: Uploaded file path
-        fileType:
-          type: string
-          description: Uploaded file MIME type
-      required:
-        - filePath
-        - fileType
-
-    PaginationMetadata:
+    PaginationMeta:
       type: object
       properties:
         total:
           type: integer
-          description: Total number of records
+          example: 42
         page:
           type: integer
-          description: Current page number
+          example: 1
         limit:
           type: integer
-          description: Records per page
-        totalPages:
-          type: integer
-          description: Total number of pages
-      required:
-        - total
-        - page
-        - limit
-        - totalPages
+          example: 10
 
     ErrorResponse:
       type: object
       properties:
-        message:
+        statusCode:
+          type: integer
+        statusMessage:
           type: string
-          description: Error message
-        error:
-          type: string
-          description: Detailed error information
-      required:
-        - message
+        data:
+          type: object
+          description: Additional error details (e.g. Valibot validation issues)
 
-tags:
-  - name: Candidates
-    description: Operations related to candidate management
-  - name: Positions
-    description: Operations related to job position management
-  - name: File Upload
-    description: Operations related to file uploads
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 401
+            statusMessage: Unauthorized
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 404
+            statusMessage: User not found
+
+    ValidationError:
+      description: Validation failed (Valibot)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 422
+            statusMessage: Validation failed
+            data:
+              issues: [{ message: 'Invalid email', path: [{ key: 'email' }] }]
+
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 409
+            statusMessage: Email already registered
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

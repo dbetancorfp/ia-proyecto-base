@@ -29,14 +29,25 @@ Perform a comprehensive review of the code changes before merging to main/develo
 
 Check the diff against `ai-specs/specs/backend-standards.mdc` and `ai-specs/specs/frontend-standards.mdc`:
 
-- [ ] Architecture compliance (DDD layers not violated)
-- [ ] No business logic in controllers
-- [ ] No direct Prisma calls in services (goes through domain)
+**Server layer (Nuxt `server/`):**
+- [ ] DDD layers respected: `server/api/` → `server/services/` → `server/domain/` → `server/infrastructure/`
+- [ ] No business logic in H3 route handlers (only parse, validate, call service, return)
+- [ ] No direct Prisma imports in services (goes through repository interface)
+- [ ] Valibot validation in API routes before calling services
+- [ ] Errors thrown via `createError()` with correct HTTP status codes
+
+**Frontend layer (Nuxt `app/`):**
+- [ ] `<script setup lang="ts">` — no Options API
+- [ ] Pinia stores for shared state, composables for component-local logic
+- [ ] PrimeVue components used — no duplicate custom UI for things PrimeVue covers
+- [ ] `useFetch`/`useAsyncData` for SSR data, `$fetch` for mutations
+- [ ] No `window`/`document` access outside `onMounted`
+
+**Both:**
 - [ ] TypeScript strict typing throughout (no `any`)
-- [ ] Descriptive naming for variables, functions, classes
+- [ ] Descriptive naming for variables, functions, components (English only)
 - [ ] No repeated code patterns (DRY)
-- [ ] Error handling at all layers with correct HTTP status codes
-- [ ] No console.log or debug code left in production paths
+- [ ] No `console.log` or debug code left in production paths
 
 ## 4. Test review
 
@@ -44,16 +55,17 @@ Check the diff against `ai-specs/specs/backend-standards.mdc` and `ai-specs/spec
 - [ ] Descriptive test names (reads like a sentence)
 - [ ] Both happy path and error paths covered
 - [ ] No test depends on another test's state
-- [ ] Coverage meets 90% threshold (check Jest report if available)
+- [ ] Coverage meets 90% threshold (check Vitest coverage report if available)
+- [ ] Playwright E2E tests added for new user-facing flows
 
 ## 5. Security review (abbreviated)
 
 Apply the checklist from `.claude/agents/security-reviewer.md`:
 - [ ] No hardcoded secrets
-- [ ] Auth middleware on protected routes
-- [ ] Input validation before DB operations
+- [ ] Auth server middleware in `server/middleware/` on protected routes
+- [ ] Valibot validation before any DB operation
 - [ ] Prisma queries parameterized (no raw string interpolation)
-- [ ] No sensitive data in logs or error responses
+- [ ] No sensitive data in logs or `createError()` responses
 
 ## 6. Documentation check
 

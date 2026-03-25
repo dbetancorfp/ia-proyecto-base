@@ -1,153 +1,220 @@
 # Development Guide
 
-This guide provides step-by-step instructions for setting up the development environment and running tests for the LTI ATS system.
+Setup instructions and workflow reference for the Nuxt 4 application.
 
-## 🚀 Setup Instructions
+## Prerequisites
 
-### Prerequisites
-
-Ensure you have the following installed:
-- **Node.js** (v16 or higher)
-- **npm** (v8 or higher)
-- **Docker** and **Docker Compose**
+- **Node.js** v20 or higher (LTS recommended)
+- **npm** v10 or higher
+- **Docker** and **Docker Compose** (for PostgreSQL)
 - **Git**
 
-### 1. Clone the Repository
+---
+
+## 1. Clone the Repository
 
 ```bash
-git clone git@github.com:LIDR-academy/AI4Devs-LTI-extended.git
-cd AI4Devs-LTI-extended
+git clone https://github.com/your-org/your-repo.git
+cd your-repo
 ```
 
-### 2. Environment Configuration
+---
 
-Create environment files for both backend and frontend:
+## 2. Environment Configuration
 
-**Backend Environment** (`backend/.env`):
+Create a `.env` file in the project root (single file — no separate backend/frontend envs):
+
 ```env
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=LTIdbUser
-DB_PASSWORD=D1ymf8wyQEGthFR1E9xhCq
-DB_NAME=LTIdb
+# Database
+DATABASE_URL="postgresql://appuser:apppassword@localhost:5432/appdb"
 
-# Application Configuration
-PORT=3000
+# App
+NUXT_PUBLIC_APP_NAME="Your App Name"
 NODE_ENV=development
-
-# Prisma Database URL
-DATABASE_URL="postgresql://LTIdbUser:D1ymf8wyQEGthFR1E9xhCq@localhost:5432/LTIdb"
 ```
 
-**Frontend Environment** (`frontend/.env`):
-```env
-REACT_APP_API_URL=http://localhost:3000
-```
+> Never commit `.env` — it is gitignored. Share a `.env.example` with placeholder values.
 
-### 3. Database Setup (PostgreSQL with Docker)
+---
 
-Start the PostgreSQL database using Docker Compose:
+## 3. Database Setup (PostgreSQL via Docker)
 
 ```bash
 # Start PostgreSQL container
 docker-compose up -d
 
-# Verify the database is running
+# Verify it is running
 docker-compose ps
 ```
 
-The PostgreSQL database will be available at:
-- **Host**: `localhost`
-- **Port**: `5432`
-- **Database**: `LTIdb`
-- **Username**: `LTIdbUser`
-- **Password**: `D1ymf8wyQEGthFR1E9xhCq`
+Default `docker-compose.yml` configuration:
 
-### 4. Backend Setup
+```yaml
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppassword
+      POSTGRES_DB: appdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+---
+
+## 4. Install Dependencies
 
 ```bash
-# Navigate to backend directory
-cd backend
-
-# Install dependencies
 npm install
+```
 
-# Generate Prisma client
-npm run prisma:generate
+The `postinstall` script automatically runs:
+1. `prisma generate` — generates the Prisma client from `server/db/prisma/schema.prisma`
+2. `nuxt prepare` — generates Nuxt type declarations
 
-# Run database migrations
-npx prisma migrate deploy
+---
+
+## 5. Database Migrations
+
+```bash
+# Create and apply a new migration (development)
+npm run prisma:migrate:dev -- --name initial_schema
+
+# Apply existing migrations (CI / production)
+npm run prisma:migrate:deploy
 
 # (Optional) Seed the database with sample data
-npx prisma db seed
+npm run prisma:seed
+```
 
-# Start the development server
+---
+
+## 6. Start the Development Server
+
+```bash
 npm run dev
 ```
 
-The backend API will be available at `http://localhost:3000`
+Nuxt starts a single dev server that serves both the frontend and the API routes:
 
-### 5. Frontend Setup
+- **App**: `http://localhost:3000`
+- **API**: `http://localhost:3000/api/*`
+
+There is no separate backend server — everything runs under Nitro.
+
+---
+
+## 7. Available Scripts
 
 ```bash
-# Navigate to frontend directory (from project root)
-cd frontend
+npm run dev               # Start development server
+npm run build             # Production build
+npm run preview           # Preview production build locally
+npm run generate          # Generate static site
 
-# Install dependencies
-npm install
+npm test                  # Run Vitest unit tests
+npm run test:watch        # Vitest in watch mode
+npm run test:e2e          # Run Playwright E2E tests
 
-# Start the development server
-npm start
+npm run typecheck         # vue-tsc type check (no emit)
+npm run lint              # ESLint
+npm run lint:fix          # ESLint with auto-fix
+
+npm run prisma:generate   # Regenerate Prisma client
+npm run prisma:migrate:dev        # Create + apply migration (dev)
+npm run prisma:migrate:deploy     # Apply migrations (prod/CI)
+npm run prisma:push       # Push schema without migration (prototyping only)
+npm run prisma:studio     # Open Prisma Studio GUI at localhost:5555
+npm run prisma:seed       # Run seed script
 ```
 
-The frontend application will be available at `http://localhost:3001`
+---
 
-### 6. Cypress Testing Suite Setup
+## 8. Testing
 
-```bash
-# From the frontend directory
-cd frontend
-
-# Install Cypress (if not already installed)
-npm install
-
-# Open Cypress Test Runner (Interactive)
-npm run cypress:open
-
-# Or run tests headlessly
-npm run cypress:run
-```
-
-## 🧪 Testing
-
-### Backend Testing
+### Unit Tests (Vitest)
 
 ```bash
-cd backend
-
-# Run all tests
+# Run all tests once
 npm test
 
-# Run tests in watch mode
+# Watch mode (re-runs on file change)
 npm run test:watch
 
-# Run tests with coverage
-npm run test:coverage
+# With coverage report
+npx vitest run --coverage
 ```
 
-### Frontend Testing
+Tests live in `tests/` and as `*.test.ts` files co-located with source.
+
+### E2E Tests (Playwright)
 
 ```bash
-cd frontend
+# Install browsers (first time only)
+npx playwright install
 
-# Run unit tests
-npm test
+# Run all E2E tests
+npm run test:e2e
 
-# Run E2E tests with Cypress
-npm run cypress:run
+# Run with UI mode (interactive)
+npx playwright test --ui
 
-# Open Cypress Test Runner
-npm run cypress:open
+# Run a specific test file
+npx playwright test e2e/users.spec.ts
 ```
 
+E2E tests require the dev server to be running (`npm run dev` in another terminal) or use Playwright's `webServer` config to start it automatically.
+
+---
+
+## 9. Prisma Studio
+
+Visual GUI for browsing and editing the database:
+
+```bash
+npm run prisma:studio
+# Opens at http://localhost:5555
+```
+
+---
+
+## 10. Project Structure Reference
+
+```
+.
+├── app/                          # Frontend (Vue 3 pages, components, stores)
+│   ├── pages/                    # File-based routing
+│   ├── components/               # Reusable Vue components
+│   ├── composables/              # Auto-imported composables
+│   ├── stores/                   # Pinia stores
+│   ├── layouts/                  # Page layouts
+│   └── middleware/               # Client-side route guards
+│
+├── server/                       # Backend (Nitro server)
+│   ├── api/                      # HTTP API routes (H3 handlers)
+│   ├── services/                 # Business logic (Application layer)
+│   ├── domain/                   # Entities + repository interfaces
+│   ├── infrastructure/           # Prisma repository implementations
+│   ├── middleware/               # Server middleware (auth, logging)
+│   ├── utils/                    # Server utilities (prisma.ts, etc.)
+│   └── db/
+│       └── prisma/
+│           ├── schema.prisma     # Database schema
+│           ├── migrations/       # Migration history
+│           └── seed.ts           # Seed data
+│
+├── tests/                        # Vitest unit tests
+├── e2e/                          # Playwright E2E tests
+├── public/                       # Static assets (not processed)
+├── nuxt.config.ts                # Nuxt configuration
+├── playwright.config.ts          # Playwright configuration
+├── vitest.config.ts              # Vitest configuration
+├── tsconfig.json                 # TypeScript configuration
+└── package.json
+```

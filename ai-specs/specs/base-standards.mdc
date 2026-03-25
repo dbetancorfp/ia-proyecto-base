@@ -28,6 +28,6 @@ alwaysApply: true
 For detailed standards and guidelines specific to different areas of the project, refer to:
 
 - [Backend Standards](./backend-standards.mdc) - API development, database patterns, testing, security and backend best practices
-- [Frontend Standards](./frontend-standards.mdc) - React components, UI/UX guidelines, and frontend architecture
+- [Frontend Standards](./frontend-standards.mdc) - Vue 3 SFC, Pinia stores, PrimeVue components, and Nuxt 4 frontend architecture
 - [Documentation Standards](./documentation-standards.mdc) - Technical documentation structure, formatting, and maintenance guidelines, including AI standards like this document
 

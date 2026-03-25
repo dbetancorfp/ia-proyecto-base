@@ -1,6 +1,6 @@
 # Role
 
-You are an expert frontend architect with extensive experience in React projects applying best practices.
+You are an expert frontend architect with extensive experience in Nuxt 4, Vue 3, Pinia, and PrimeVue projects applying best practices.
 
 # Ticket ID
 
@@ -30,7 +30,7 @@ Follow this template:
 - Title: `# Frontend Implementation Plan: [TICKET-ID] [Feature Name]`
 
 ### 2. **Overview**
-- Brief description of the feature and frontend architecture principles (component-based architecture, service layer, React patterns)
+- Brief description of the feature and frontend architecture principles (Nuxt 4 pages, Pinia stores, composables, PrimeVue components)
 
 ### 3. **Architecture Context**
 - Components/services involved
@@ -43,7 +43,7 @@ Detailed steps, typically:
 
 #### **Step 0: Create Feature Branch**
 - **Action**: Create and switch to a new feature branch following the development workflow. Check if it exists and if not, create it
-- **Branch Naming**: Follow the project's branch naming convention (`feature/GH-[issue-number]-frontend`, e.g. `feature/GH-42-frontend`; do not stay on the general issue branch if it exists — separate concerns)
+- **Branch Naming**: `feature/GH-[issue-number]-frontend`, e.g. `feature/GH-42-frontend` — do not stay on the general issue branch; suffix `-frontend` to allow parallel backend work
 - **Implementation Steps**:
   1. Ensure you're on the latest `main` or `develop` branch (or appropriate base branch)
   2. Pull latest changes: `git pull origin [base-branch]`
@@ -59,11 +59,12 @@ Detailed steps, typically:
 - **Dependencies**: Required imports
 - **Implementation Notes**: Technical details
 
-Common steps:
-- **Step 1**: Update/Create Service Methods (API communication in `src/services/`)
-- **Step 2**: Create/Update Components (React components in `src/components/`)
-- **Step 3**: Update Routing (if new pages/routes needed in `src/App.js`)
-- **Step 4**: Write Cypress E2E Tests (test files in `cypress/e2e/`)
+Common steps (Nuxt 4 frontend layers):
+- **Step 1**: Pinia store update/creation in `app/stores/` (if shared state needed)
+- **Step 2**: Composable in `app/composables/` (data fetching + logic)
+- **Step 3**: Vue SFC components in `app/components/` (PrimeVue, `<script setup lang="ts">`)
+- **Step 4**: Page in `app/pages/` (file-based routing, uses composables + store)
+- **Step 5**: Playwright E2E tests in `e2e/` (happy path + error scenarios)
 
 #### **Step N+1: Update Technical Documentation**
 - **Action**: Review and update technical documentation according to changes made
@@ -74,7 +75,7 @@ Common steps:
      - UI/UX patterns or component patterns → Update `ai-specs/specs/frontend-standards.mdc`
      - Routing changes → Update routing documentation
      - New dependencies or configuration changes → Update `ai-specs/specs/frontend-standards.mdc`
-     - Test patterns or Cypress changes → Update testing documentation
+     - Test patterns or Playwright changes → Update testing documentation
   3. **Update Documentation**: For each affected file:
      - Update content in English (as per `documentation-standards.mdc`)
      - Maintain consistency with existing documentation structure
@@ -93,9 +94,9 @@ Common steps:
 
 ### 6. **Testing Checklist**
 - Post-implementation verification checklist
-- Cypress E2E test coverage
-- Component functionality verification
-- Error handling verification
+- Playwright E2E test coverage (happy path + error scenarios)
+- Vitest component unit test coverage
+- Loading and error state verification
 
 ### 7. **Error Handling Patterns**
 - Error state management in components
@@ -103,21 +104,20 @@ Common steps:
 - API error handling in services
 
 ### 8. **UI/UX Considerations** (if applicable)
-- Bootstrap component usage
+- PrimeVue component usage (check docs before writing custom components)
 - Responsive design considerations
-- Accessibility requirements
-- Loading states and feedback
+- Accessibility requirements (aria-label, keyboard nav)
+- Loading states (`:loading` props, Skeleton components) and feedback (Toast, ConfirmDialog)
 
 ### 9. **Dependencies**
-- External libraries and tools required
-- React Bootstrap components used
-- Third-party packages (if any)
+- PrimeVue components used (list them explicitly)
+- New npm packages required — justify each one (avoid adding if PrimeVue covers it)
 
 ### 10. **Notes**
 - Important reminders and constraints
 - Business rules
 - Language requirements (English only)
-- TypeScript vs JavaScript considerations
+- SSR considerations (avoid `window`/`document` in `<script setup>` without `onMounted`)
 
 ### 11. **Next Steps After Implementation**
 - Post-implementation tasks (documentation is already covered in Step N+1, but may include integration, deployment, etc.)
