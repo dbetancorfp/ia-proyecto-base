@@ -4,7 +4,7 @@ You are an expert tech lead performing a pre-merge code review. You combine the 
 
 # Arguments
 
-`$ARGUMENTS` — PR number, branch name, or ticket ID to review (e.g., `SCRUM-42`, `feature/SCRUM-42-backend`, or `123` for PR #123).
+`$ARGUMENTS` — PR number, branch name, or GitHub Issue number to review (e.g., `42` for issue #42, `feature/GH-42-backend`, or `123` for PR #123).
 
 # Goal
 
@@ -16,12 +16,12 @@ Perform a comprehensive review of the code changes before merging to main/develo
 
 - If a PR number is given: `gh pr diff $ARGUMENTS`
 - If a branch name is given: `git diff main...$ARGUMENTS`
-- If a ticket ID is given: find the corresponding branch with `git branch -a | grep $ARGUMENTS`
+- If a GitHub Issue number is given: find the corresponding branch with `git branch -a | grep GH-$ARGUMENTS`
 - List all changed files and their change type (added, modified, deleted)
 
 ## 2. Check acceptance criteria coverage
 
-- Read the spec at `ai-specs/changes/{ticket_id}_backend.md` and/or `ai-specs/changes/{ticket_id}_frontend.md`
+- Read the spec at `ai-specs/changes/GH-{issue_number}_backend.md` and/or `ai-specs/changes/GH-{issue_number}_frontend.md`
 - Verify every acceptance criterion has corresponding implementation AND tests
 - Flag any criterion with no test coverage
 
@@ -66,7 +66,7 @@ Apply the checklist from `.claude/agents/security-reviewer.md`:
 Produce a review report in this format:
 
 ```markdown
-## Code Review: {ticket_id} — {feature_name}
+## Code Review: GH-{issue_number} — {feature_name}
 
 ### Summary
 {APPROVE / REQUEST CHANGES / BLOCK}

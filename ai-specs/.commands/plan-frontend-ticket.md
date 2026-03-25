@@ -8,20 +8,20 @@ $ARGUMENTS
 
 # Goal
 
-Obtain a step-by-step plan for a Jira ticket that is ready to start implementing.
+Obtain a step-by-step plan for a GitHub Issue that is ready to start implementing.
 
 # Process and rules
 
 1. Adopt the role of `.claude/agents/frontend-developer.md`
-2. Analyze the Jira ticket mentioned in #ticket using the MCP. If the mention is a local file, then avoid using MCP
+2. Get the issue details with: `gh issue view $ARGUMENTS`. If the argument is a local file path, read it directly and skip the `gh` command.
 3. Propose a step-by-step plan for the frontend part, taking into account everything mentioned in the ticket and applying the project's best practices and rules you can find in `/ai-specs/specs`.
 4. Apply the best practices of your role to ensure the developer can be fully autonomous and implement the ticket end-to-end using only your plan.
 5. Do not write code yet; provide only the plan in the output format defined below.
-6. If you are asked to start implementing at some point, make sure the first thing you do is to move to a branch named after the ticket id (if you are not yet there) and follow the process described in the command /develop-us.md
+6. If you are asked to start implementing at some point, make sure the first thing you do is to move to a branch named after the issue id (if you are not yet there) and follow the process described in the command /develop-frontend.md
 
 # Output format
 
-Markdown document at the path `ai-specs/changes/[jira_id]_frontend.md` containing the complete implementation details.
+Markdown document at the path `ai-specs/changes/GH-[issue_number]_frontend.md` containing the complete implementation details.
 Follow this template:
 
 ## Frontend Implementation Plan Ticket Template Structure
@@ -43,7 +43,7 @@ Detailed steps, typically:
 
 #### **Step 0: Create Feature Branch**
 - **Action**: Create and switch to a new feature branch following the development workflow. Check if it exists and if not, create it
-- **Branch Naming**: Follow the project's branch naming convention (`feature/[ticket-id]-frontend`, make it required to use this naming, don't allow to keep on the general task [ticket-id] if it exists to separate concerns)
+- **Branch Naming**: Follow the project's branch naming convention (`feature/GH-[issue-number]-frontend`, e.g. `feature/GH-42-frontend`; do not stay on the general issue branch if it exists — separate concerns)
 - **Implementation Steps**:
   1. Ensure you're on the latest `main` or `develop` branch (or appropriate base branch)
   2. Pull latest changes: `git pull origin [base-branch]`

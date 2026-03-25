@@ -3,7 +3,7 @@
 **Date**: YYYY-MM-DD
 **Figma source**: {Link or file name}
 **Related interview**: `ai-specs/discovery/client-interviews/{file}.md`
-**Related ticket**: SCRUM-{N} (if already created)
+**Related issue**: GH-{N} (if already created)
 
 ---
 

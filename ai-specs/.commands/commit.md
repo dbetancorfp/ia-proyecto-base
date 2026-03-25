@@ -7,7 +7,7 @@ You are an expert in version control and release workflows. You create clear, co
 **Optional.** `$ARGUMENTS` may contain:
 
 - **Nothing (empty)**: Stage and commit all relevant changes in the working tree, then open a single PR.
-- **Feature/ticket identifiers**: e.g. ticket IDs (e.g. `SCRUM-123`), branch names, or short feature labels. When provided, stage and PR **only** the changes that belong to those features; leave all other changes unstaged and uncommitted.
+- **Feature/issue identifiers**: e.g. issue numbers (e.g. `#123` or `GH-123`), branch names, or short feature labels. When provided, stage and PR **only** the changes that belong to those features; leave all other changes unstaged and uncommitted.
 - **Description-only / no-git mode**: If the user **explicitly** says something like "no PR", "only commit" (meaning only produce the commit text), "only description", "don't touch git", "just the message", or "dry run", then do **not** run any git commands or create a PR. Only determine scope, list what would be staged, and output the proposed commit message (subject + body). The user can copy and run git commands themselves.
 
 # Goal
@@ -40,7 +40,7 @@ If the user **explicitly** requested no git operations (e.g. "no PR", "only comm
   - Treat all relevant changes (excluding files that should not be committed, e.g. `.env`, build artifacts, local config) as the scope for this commit.  
   - Stage all of those and proceed to step 3.
 
-- **If `$ARGUMENTS` is provided (e.g. ticket IDs or feature names)**  
+- **If `$ARGUMENTS` is provided (e.g. issue numbers or feature names)**  
   - Map each argument to the changes that clearly belong to it (by path, ticket id in branch name, or context in diffs).  
   - Stage **only** the files/hunks that belong to those features.  
   - Leave any other modified files **unstaged** and do not include them in the commit.  
@@ -52,8 +52,8 @@ If the user **explicitly** requested no git operations (e.g. "no PR", "only comm
 - Write the commit message **in English** (per `ai-specs/specs/base-standards.mdc`).
 - Make it **descriptive** (per Git Workflow in `backend-standards.mdc` and `frontend-standards.mdc`).
 - Structure it so that:
-  - **Subject line**: Short, imperative summary (e.g. "Add candidate filters to position list", "Fix validation for application deadline"). Optionally prefix with a scope or ticket id (e.g. `SCRUM-123: Add candidate filters`).
-  - **Body** (if needed): Bullet points or short paragraphs describing what changed and why (areas touched, new behavior, fixes). Reference ticket IDs here if they apply.
+  - **Subject line**: Short, imperative summary (e.g. "Add candidate filters to position list", "Fix validation for application deadline"). Optionally prefix with a scope or ticket id (e.g. `GH-123: Add candidate filters`).
+  - **Body** (if needed): Bullet points or short paragraphs describing what changed and why (areas touched, new behavior, fixes). Reference issue numbers here if they apply.
 - Do not commit secrets, `.env`, or other sensitive or generated artifacts.
 
 ## 4. Commit and push
@@ -65,8 +65,8 @@ If the user **explicitly** requested no git operations (e.g. "no PR", "only comm
 
 - Use the **GitHub CLI (`gh`)** for all GitHub operations (per `develop-backend.md`).
 - Create or update the PR for the current branch:
-  - **Title**: Clear, aligned with the commit (e.g. include ticket ID if applicable: `[SCRUM-123] Add candidate filters to position list`).
-  - **Description**: Summarize the change set, link to the ticket if relevant, and note any testing or follow-ups.
+  - **Title**: Clear, aligned with the commit (e.g. include ticket ID if applicable: `[GH-123] Add candidate filters to position list`).
+  - **Description**: Summarize the change set, include `Closes #ISSUE_NUMBER` to auto-close the GitHub Issue on merge, and note any testing or follow-ups.
 - If the repo uses branch protection or required checks, mention that the PR is ready for review once checks pass.
 
 ## 6. Summary for the user

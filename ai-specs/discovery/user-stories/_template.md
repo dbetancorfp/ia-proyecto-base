@@ -1,8 +1,8 @@
-# User Story: {SCRUM-N} — {Title}
+# User Story: GH-{N} — {Title}
 
 **Status**: To Refine / Refined / In Progress / Done
 **Priority**: High / Medium / Low
-**Sprint**: {N}
+**Milestone**: {milestone name or number}
 **Source**: `ai-specs/discovery/client-interviews/{file}.md`
 
 ---
@@ -56,8 +56,8 @@ _Implementation hints for backend and frontend developers._
 
 ## Dependencies
 
-- Requires: SCRUM-{N} (User Registration) to be done first
-- Blocks: SCRUM-{N+1} (Dashboard access control)
+- Requires: GH-{N} (User Registration) to be done first
+- Blocks: GH-{N+1} (Dashboard access control)
 
 ---
 

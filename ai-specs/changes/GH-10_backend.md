@@ -1,8 +1,8 @@
-# Backend Implementation Plan: SCRUM-10 Position Update Feature
+# Backend Implementation Plan: GH-10 Position Update Feature
 
 ## Overview
 
-This document provides a comprehensive step-by-step implementation plan for the Position Update feature (SCRUM-10). The feature enables recruiters to update details of open positions through a REST API endpoint. The implementation follows Domain-Driven Design (DDD) principles, clean architecture patterns, and the project's established coding standards.
+This document provides a comprehensive step-by-step implementation plan for the Position Update feature (GH-10). The feature enables recruiters to update details of open positions through a REST API endpoint. The implementation follows Domain-Driven Design (DDD) principles, clean architecture patterns, and the project's established coding standards.
 
 **Key Architecture Principles:**
 - **Domain-Driven Design (DDD)**: Business logic encapsulated in domain models
@@ -50,7 +50,7 @@ This document provides a comprehensive step-by-step implementation plan for the 
 
 **Action**: Create and switch to a new feature branch following the development workflow
 
-**Branch Naming**: `feature/SCRUM-10-backend`
+**Branch Naming**: `feature/GH-10-backend`
 
 **Implementation Steps**:
 1. Ensure you're on the latest `main` or `develop` branch
@@ -63,7 +63,7 @@ This document provides a comprehensive step-by-step implementation plan for the 
    ```
 3. Create new feature branch
    ```bash
-   git checkout -b feature/SCRUM-10-backend
+   git checkout -b feature/GH-10-backend
    ```
 4. Verify branch creation
    ```bash
@@ -1802,7 +1802,7 @@ describe('PositionController - updatePosition', () => {
 
 ## Implementation Order
 
-1. **Step 0**: Create Feature Branch (`feature/SCRUM-10-backend`)
+1. **Step 0**: Create Feature Branch (`feature/GH-10-backend`)
 2. **Step 1**: Create Validation Function (`validatePositionUpdate` in `validator.ts`)
 3. **Step 2**: Create Service Method (`updatePositionService` in `positionService.ts`)
 4. **Step 3**: Create Controller Method (`updatePosition` in `positionController.ts`)
@@ -2085,5 +2085,5 @@ Before considering the implementation complete, verify:
 
 **END OF IMPLEMENTATION PLAN**
 
-This plan provides complete, step-by-step instructions for implementing the Position Update feature (SCRUM-10) following Domain-Driven Design principles, clean architecture patterns, and the project's established standards. The developer can implement this feature end-to-end autonomously using only this plan.
+This plan provides complete, step-by-step instructions for implementing the Position Update feature (GH-10) following Domain-Driven Design principles, clean architecture patterns, and the project's established standards. The developer can implement this feature end-to-end autonomously using only this plan.
 

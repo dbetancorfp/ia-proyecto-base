@@ -1,8 +1,8 @@
-# Handoff: {feature_name} — {SCRUM-N}
+# Handoff: {feature_name} — {GH-N}
 
 **Date**: YYYY-MM-DD
 **Session**: {N} of this feature
-**Branch**: `feature/SCRUM-N-{backend|frontend}`
+**Branch**: `feature/GH-N-{backend|frontend}`
 **Next session starts at**: Step {N} — {step name}
 
 ---
@@ -19,7 +19,7 @@
 
 ## Completed This Session
 
-- [x] Step 0: Feature branch created (`feature/SCRUM-N-backend`)
+- [x] Step 0: Feature branch created (`feature/GH-N-backend`)
 - [x] Step 1: Validation function in `src/application/validator.ts`
 - [x] Step 2: Service method `authService.login()` implemented and tested
 
@@ -95,7 +95,7 @@ Give Claude this prompt at the start of the next session:
 Read ai-specs/handoffs/{feature}-handoff.md and
 .claude/sessions/context_session_{feature}.md
 
-Resume the implementation of SCRUM-N from where we left off.
+Resume the implementation of GH-N from where we left off.
 Start with the next step described in the handoff.
 Before writing any code, confirm with me what you plan to do.
 ```

@@ -15,42 +15,44 @@ It's highly recommended to be used along with Spec-Driven Development frameworks
 ├── GEMINI.md                              # Symlink → ai-specs/specs/base-standards.mdc
 │
 ├── .claude/                               # Claude Code local config (gitignored in part)
-│   ├── settings.json                      # MCP servers, permissions
-│   ├── settings.local.json                # Local overrides (gitignored)
+│   ├── settings.json                      # Permissions + MCPs: github, sequential-thinking, context7
+│   ├── settings.local.json                # Local token overrides (gitignored — create from template)
 │   ├── sessions/                          # Session handoff context (gitignored)
+│   │   └── README.md                      # How to save/resume session state
 │   └── doc/                               # Agent-generated plans (gitignored)
+│       └── README.md                      # Workflow: plan → review → implement
 │
 └── ai-specs/                              # All AI knowledge for this project
     ├── specs/                             # Technical standards and contracts
-    │   ├── base-standards.mdc             # Core rules — single source of truth
+    │   ├── base-standards.mdc             # Core rules — single source of truth (CLAUDE.md target)
     │   ├── backend-standards.mdc          # DDD, Express, Prisma, testing
     │   ├── frontend-standards.mdc         # React, React Bootstrap, Cypress
     │   ├── documentation-standards.mdc    # Docs structure and maintenance
-    │   ├── api-spec.yml                   # OpenAPI 3.0 contract
-    │   ├── data-model.md                  # Domain entities and DB schema
-    │   └── development_guide.md           # Setup and workflow guide
+    │   ├── api-spec.yml                   # OpenAPI 3.0 contract (replace with your own)
+    │   ├── data-model.md                  # Domain entities and DB schema (replace with your own)
+    │   └── development_guide.md           # Setup and workflow guide (replace with your own)
     │
-    ├── .agents/                           # Specialized agent definitions
-    │   ├── product-strategy-analyst.md    # Discovery, use cases, value proposition
-    │   ├── backend-developer.md           # DDD backend planning (never implements)
-    │   ├── frontend-developer.md          # React frontend planning (never implements)
-    │   ├── qa-engineer.md                 # TDD test generation and coverage review
-    │   └── security-reviewer.md           # OWASP audit before merge
+    ├── .agents/                           # Specialized agent role definitions
+    │   ├── product-strategy-analyst.md    # Role: Discovery, use cases, value proposition
+    │   ├── backend-developer.md           # Role: DDD backend planning (never implements)
+    │   ├── frontend-developer.md          # Role: React frontend planning (never implements)
+    │   ├── qa-engineer.md                 # Role: TDD test generation and coverage review
+    │   └── security-reviewer.md          # Role: OWASP audit before merge
     │
-    ├── .commands/                         # Slash commands (/command)
-    │   ├── enrich-us.md                   # /enrich-us SCRUM-N — enhance user stories
-    │   ├── plan-backend-ticket.md         # /plan-backend-ticket SCRUM-N
-    │   ├── plan-frontend-ticket.md        # /plan-frontend-ticket SCRUM-N
-    │   ├── develop-backend.md             # /develop-backend SCRUM-N — implement
-    │   ├── develop-frontend.md            # /develop-frontend SCRUM-N — implement
-    │   ├── review-pr.md                   # /review-pr SCRUM-N — pre-merge review
+    ├── .commands/                         # Slash commands — type /command in Claude Code
+    │   ├── enrich-us.md                   # /enrich-us #N — enrich a user story
+    │   ├── plan-backend-ticket.md         # /plan-backend-ticket #N — generate backend plan
+    │   ├── plan-frontend-ticket.md        # /plan-frontend-ticket #N — generate frontend plan
+    │   ├── develop-backend.md             # /develop-backend #N — implement from plan
+    │   ├── develop-frontend.md            # /develop-frontend #N — implement from plan
+    │   ├── review-pr.md                   # /review-pr #N — pre-merge review (security + QA)
     │   ├── deploy.md                      # /deploy staging|production
-    │   ├── commit.md                      # /commit — smart commit + PR
-    │   ├── update-docs.md                 # /update-docs — sync documentation
-    │   ├── explain.md                     # /explain — teaching mode
-    │   └── meta-prompt.md                 # /meta-prompt — improve a prompt
+    │   ├── commit.md                      # /commit — smart commit + PR creation
+    │   ├── update-docs.md                 # /update-docs — sync API docs and data model
+    │   ├── explain.md                     # /explain — teaching mode for any code
+    │   └── meta-prompt.md                 # /meta-prompt — improve an existing prompt
     │
-    ├── discovery/                         # Client → requirements phase
+    ├── discovery/                         # Phase 1: Client → Requirements
     │   ├── client-interviews/             # Raw notes from client meetings
     │   │   └── _template.md
     │   ├── figma-analysis/                # Screen-by-screen design breakdown
@@ -58,11 +60,11 @@ It's highly recommended to be used along with Spec-Driven Development frameworks
     │   └── user-stories/                  # Structured user stories pre-refinement
     │       └── _template.md
     │
-    ├── changes/                           # Implementation plans per ticket
-    │   ├── SCRUM-10_backend.md            # Demo: Position update (backend)
-    │   └── SCRUM-10-Position-Update.md    # Demo: Enriched user story
+    ├── changes/                           # Phase 2: Enriched stories + implementation plans
+    │   ├── GH-10_backend.md               # Demo: backend implementation plan (GH-[issue_number]_backend.md)
+    │   └── GH-10-Position-Update.md       # Demo: enriched user story with acceptance criteria
     │
-    └── handoffs/                          # Session state between Claude sessions
+    └── handoffs/                          # Phase 3: Session state between Claude sessions
         └── _template.md
 ```
 
@@ -114,7 +116,7 @@ The most efficient way to work with this setup is using a command-based workflow
 If your user story lacks detail or acceptance criteria, use the **`enrich-us`** command to enhance it:
 
 ```
-/enrich-us SCRUM-10
+/enrich-us GH-10
 ```
 
 This command analyzes the user story and generates:
@@ -130,13 +132,13 @@ This command analyzes the user story and generates:
 Use **`plan-ticket`** commands to generate detailed implementation plans:
 
 ```
-plan-backend-ticket SCRUM-10
+plan-backend-ticket GH-10
 ```
 
 or
 
 ```
-plan-frontend-ticket SCRUM-15
+plan-frontend-ticket GH-15
 ```
 
 This creates a comprehensive, step-by-step implementation plan in `ai-specs/changes/`.
@@ -146,24 +148,24 @@ This creates a comprehensive, step-by-step implementation plan in `ai-specs/chan
 Reference the generated plan and execute:
 
 ```
-develop-backend @SCRUM-10_backend.md
+develop-backend @ai-specs/changes/GH-10_backend.md
 ```
 
 or
 
 ```
-develop-frontend @SCRUM-15_frontend.md
+develop-frontend @ai-specs/changes/GH-15_frontend.md
 ```
 
 The AI will follow the plan precisely, implementing each step with TDD, proper testing, and documentation updates.
 
-### Example: Implementing SCRUM-10 (Position Update Feature)
+### Example: Implementing Issue #10 (Position Update Feature)
 
 #### Step 1: Enrich the User Story (Optional)
 
 **You say:**
 ```
-/enrich-us SCRUM-10
+/enrich-us GH-10
 ```
 
 **AI enhances** the user story with detailed acceptance criteria and technical considerations (skip if already detailed).
@@ -172,12 +174,12 @@ The AI will follow the plan precisely, implementing each step with TDD, proper t
 
 **You say:**
 ```
-/plan-backend-ticket SCRUM-10
+/plan-backend-ticket GH-10
 ```
 
 **AI generates:**
 - Analyzes the ticket requirements
-- Creates `ai-specs/changes/SCRUM-10_backend.md` with:
+- Creates `ai-specs/changes/GH-[issue_number]_backend.md` with:
   - Architecture context
   - Step-by-step implementation instructions
   - Complete test specifications (validation, service, controller layers)
@@ -189,11 +191,11 @@ The AI will follow the plan precisely, implementing each step with TDD, proper t
 
 **You say:**
 ```
-/develop-backend @SCRUM-10_backend.md
+/develop-backend @ai-specs/changes/GH-10_backend.md
 ```
 
 **AI executes:**
-1. Creates feature branch `feature/SCRUM-10-backend`
+1. Creates feature branch `feature/GH-10-backend` (pattern: `feature/GH-[issue_number]-description`)
 2. Implements validation function with comprehensive rules
 3. Implements service layer with business logic
 4. Implements controller with HTTP handling
@@ -205,7 +207,7 @@ The AI will follow the plan precisely, implementing each step with TDD, proper t
 
 ### 📝 Demo Enriched User Story
 
-Check out **`ai-specs/changes/SCRUM-10-Position-Update.md`** for a complete example of what an enriched user story looks like. This comprehensive document includes:
+Check out **`ai-specs/changes/GH-10-Position-Update.md`** for a complete example (naming pattern: `GH-[issue_number]-Feature-Name.md`) of what an enriched user story looks like. This comprehensive document includes:
 
 - **User Story**: Clear description with persona, goal, and benefit
 - **Technical Specification**: Complete technical implementation details
@@ -222,7 +224,7 @@ This enriched document transforms a simple user story into a detailed specificat
 
 ### 📋 Demo Implementation Plan
 
-Check out **`ai-specs/changes/SCRUM-10_backend.md`** for a complete example of what a feature implementation plan looks like. This comprehensive plan includes:
+Check out **`ai-specs/changes/GH-10_backend.md`** for a complete example of what a feature implementation plan looks like. This comprehensive plan includes:
 
 - **Architecture Context**: Layers, components, and dependencies
 - **Step-by-Step Instructions**: Validation → Service → Controller → Routes → Tests → Documentation

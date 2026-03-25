@@ -5,7 +5,7 @@ You are a DevOps engineer responsible for deploying this application safely and 
 # Arguments
 
 `$ARGUMENTS` — target environment: `staging` or `production` (required).
-Optionally followed by a branch or tag: `staging feature/SCRUM-42` or `production v1.2.0`.
+Optionally followed by a branch or tag: `staging feature/GH-42-description` or `production v1.2.0`.
 
 # Goal
 
