@@ -1,36 +1,36 @@
 # /enrich-us
 
-Enhances a rough GitHub Issue with full acceptance criteria, technical notes, and validation rules — so the developer can be fully autonomous when implementing.
+Enriquece un GitHub Issue sin detalle añadiendo criterios de aceptación completos, notas técnicas y reglas de validación — para que el desarrollador pueda ser totalmente autónomo al implementar.
 
-## Usage
+## Uso
 
 ```
 /enrich-us 42
 ```
 
-## What it does
+## Qué hace
 
-1. Reads the issue with `gh issue view 42`
-2. Evaluates whether the story has sufficient detail (endpoints, fields, edge cases, test scenarios)
-3. If not, produces an enhanced version
-4. Updates the issue body in GitHub with `## [original]` and `## [enhanced]` sections
-5. Switches the label from `needs-refinement` to `pending-validation`
+1. Lee el issue con `gh issue view 42`
+2. Evalúa si la historia tiene suficiente detalle (endpoints, campos, casos extremos, escenarios de test)
+3. Si no, produce una versión mejorada
+4. Actualiza el cuerpo del issue en GitHub con secciones `## [original]` y `## [enriquecido]`
+5. Cambia la etiqueta de `needs-refinement` a `pending-validation`
 
-## When to use it
+## Cuándo usarlo
 
-Before running `/plan-backend-ticket` or `/plan-frontend-ticket`. A well-enriched issue means a better plan and fewer surprises during implementation.
+Antes de ejecutar `/plan-backend-ticket` o `/plan-frontend-ticket`. Un issue bien enriquecido produce un mejor plan y menos sorpresas durante la implementación.
 
-## Output example
+## Ejemplo de salida
 
-The enriched issue will contain:
-- User story (persona, goal, benefit)
-- Acceptance criteria in Given/When/Then format
-- API endpoint specification (method, URL, request/response)
-- Validation rules (field by field)
-- Security requirements
-- Edge cases
-- Definition of Done checklist
+El issue enriquecido contendrá:
+- Historia de usuario (persona, objetivo, beneficio)
+- Criterios de aceptación en formato Given/When/Then
+- Especificación del endpoint de API (método, URL, request/response)
+- Reglas de validación (campo por campo)
+- Requisitos de seguridad
+- Casos extremos
+- Checklist de Definition of Done
 
-## Skip it when
+## Cuándo omitirlo
 
-The issue already has detailed acceptance criteria, endpoint specs, and validation rules. Not every issue needs enrichment.
+Cuando el issue ya tiene criterios de aceptación detallados, specs de endpoints y reglas de validación. No todos los issues necesitan enriquecimiento.

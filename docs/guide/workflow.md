@@ -1,127 +1,127 @@
-# Workflow Overview
+# Resumen del flujo de trabajo
 
-Every feature follows the same six-step flow. Each step has a defined role, a Claude command, and an output artefact.
+Cada funcionalidad sigue el mismo flujo de seis pasos. Cada paso tiene un rol definido, un comando de Claude y un artefacto de salida.
 
 ```
-Client/Figma → Specs → TDD → Code → Review → Deploy
-     ↑            ↑       ↑      ↑       ↑        ↑
-  Prompts      Agents  Handoffs  Man-in-loop     gh CLI
+Cliente/Figma → Specs → TDD → Código → Revisión → Despliegue
+      ↑            ↑       ↑      ↑          ↑           ↑
+  Prompts       Agentes Handoffs Man-in-loop           gh CLI
 ```
 
-## Step 1 — Discovery (Client / Figma)
+## Paso 1 — Discovery (Cliente / Figma)
 
-**Your role**: Business Analyst + UX Researcher
-**Claude's role**: Analyst — surfaces gaps, suggests clarifying questions
+**Tu rol**: Analista de negocio + Investigador UX
+**Rol de Claude**: Analista — detecta vacíos, sugiere preguntas de aclaración
 
-### What you do
-1. Take notes during the client meeting → save to `ai-specs/discovery/client-interviews/`
-2. Screenshot Figma screens → save analysis to `ai-specs/discovery/figma-analysis/`
-3. Ask Claude to identify missing requirements and edge cases
+### Qué haces
+1. Toma notas durante la reunión con el cliente → guárdalas en `ai-specs/discovery/client-interviews/`
+2. Captura pantallas de Figma → guarda el análisis en `ai-specs/discovery/figma-analysis/`
+3. Pídele a Claude que identifique requisitos faltantes y casos extremos
 
-### Prompt example
+### Ejemplo de prompt
 ```
-Read ai-specs/discovery/client-interviews/session-01.md
-Act as a Business Analyst. Identify ambiguities, missing requirements,
-and suggest 5 clarifying questions for the client.
+Lee ai-specs/discovery/client-interviews/sesion-01.md
+Actúa como Analista de Negocio. Identifica ambigüedades, requisitos faltantes
+y sugiere 5 preguntas de aclaración para el cliente.
 ```
 
-### Output
-Structured notes + list of resolved questions
+### Salida
+Notas estructuradas + lista de preguntas resueltas
 
 ---
 
-## Step 2 — Specs
+## Paso 2 — Specs
 
-**Your role**: Product Owner
-**Claude's role**: BA + Architect
+**Tu rol**: Product Owner
+**Rol de Claude**: BA + Arquitecto
 
-### What you do
-1. Run `/enrich-us #N` to enhance a rough GitHub Issue
-2. Review the enriched story — approve or correct
-3. Run `/plan-backend-ticket #N` and `/plan-frontend-ticket #N`
-4. Review both plans before any code is written
+### Qué haces
+1. Ejecuta `/enrich-us #N` para enriquecer un GitHub Issue sin detalle
+2. Revisa la historia enriquecida — aprueba o corrige
+3. Ejecuta `/plan-backend-ticket #N` y `/plan-frontend-ticket #N`
+4. Revisa ambos planes antes de que se escriba cualquier código
 
-### Output
-- Enriched GitHub Issue with acceptance criteria
+### Salida
+- GitHub Issue enriquecido con criterios de aceptación
 - `ai-specs/changes/GH-N_backend.md`
 - `ai-specs/changes/GH-N_frontend.md`
 
 ---
 
-## Step 3 — TDD
+## Paso 3 — TDD
 
-**Your role**: Tech Lead / QA
-**Claude's role**: QA Engineer
+**Tu rol**: Tech Lead / QA
+**Rol de Claude**: Ingeniero QA
 
-Tests are written **from the plan**, before any implementation.
+Los tests se escriben **a partir del plan**, antes de cualquier implementación.
 
 ```
 /develop-backend GH-N_backend.md
 ```
 
-Claude writes failing tests first, waits for your approval, then implements.
+Claude escribe primero los tests fallidos, espera tu aprobación y luego implementa.
 
-### Output
-Test suite in red (failing) — this is correct in TDD ✅
-
----
-
-## Step 4 — Code
-
-**Your role**: Tech Lead (supervising)
-**Claude's role**: Developer
-
-Claude implements the minimum code to make tests pass, following the plan step by step. You approve each file before it is written.
-
-### Output
-All tests passing on `feature/GH-N-backend` and `feature/GH-N-frontend`
+### Salida
+Suite de tests en rojo (fallando) — esto es correcto en TDD ✅
 
 ---
 
-## Step 5 — Review
+## Paso 4 — Código
 
-**Your role**: Reviewer
-**Claude's role**: Security + QA + Tech Lead
+**Tu rol**: Tech Lead (supervisando)
+**Rol de Claude**: Desarrollador
+
+Claude implementa el código mínimo para que los tests pasen, siguiendo el plan paso a paso. Tú apruebas cada archivo antes de que se escriba.
+
+### Salida
+Todos los tests pasando en `feature/GH-N-backend` y `feature/GH-N-frontend`
+
+---
+
+## Paso 5 — Revisión
+
+**Tu rol**: Revisor
+**Rol de Claude**: Seguridad + QA + Tech Lead
 
 ```
 /review-pr #N
 ```
 
-Claude reviews the diff against standards, posts the report as a PR comment, and either approves or blocks.
+Claude revisa el diff contra los estándares, publica el informe como comentario en el PR y lo aprueba o bloquea.
 
-### Output
-PR approved (or list of required changes before merge)
+### Salida
+PR aprobado (o lista de cambios requeridos antes del merge)
 
 ---
 
-## Step 6 — Deploy
+## Paso 6 — Despliegue
 
-**Your role**: Director
-**Claude's role**: DevOps
+**Tu rol**: Director
+**Rol de Claude**: DevOps
 
 ```
 /deploy staging
 ```
 
-Claude runs pre-deploy checks (tests, lint, typecheck), triggers the GitHub Actions workflow, and waits for your explicit approval before touching production.
+Claude ejecuta las comprobaciones previas al despliegue (tests, lint, typecheck), lanza el workflow de GitHub Actions y espera tu aprobación explícita antes de tocar producción.
 
 ```
 /deploy production
 ```
 
-### Output
-Feature live in production + documentation updated
+### Salida
+Funcionalidad en producción + documentación actualizada
 
 ---
 
-## The golden rule
+## La regla de oro
 
-> **More risk → more control from you. Less risk → more autonomy for Claude.**
+> **Más riesgo → más control tuyo. Menos riesgo → más autonomía para Claude.**
 
-| Action | Claude autonomy |
+| Acción | Autonomía de Claude |
 |---|---|
-| Write a test | High — easy to revert |
-| Write business logic | Medium — you review before approving |
-| Create a commit | Medium — you see the diff first |
-| Open a PR | Low — affects others |
-| Deploy to production | Minimum — irreversible |
+| Escribir un test | Alta — fácil de revertir |
+| Escribir lógica de negocio | Media — lo revisas antes de aprobar |
+| Crear un commit | Media — ves el diff primero |
+| Abrir un PR | Baja — afecta a otros |
+| Desplegar a producción | Mínima — irreversible |

@@ -1,8 +1,8 @@
 # /deploy
 
-Deploys the application to staging or production via GitHub Actions. Always asks for explicit confirmation before touching production.
+Despliega la aplicación a staging o producción mediante GitHub Actions. Siempre pide confirmación explícita antes de tocar producción.
 
-## Usage
+## Uso
 
 ```
 /deploy staging
@@ -11,36 +11,36 @@ Deploys the application to staging or production via GitHub Actions. Always asks
 /deploy production v1.2.0
 ```
 
-## What it does
+## Qué hace
 
-### Pre-deploy checks (always)
-1. Confirms the correct branch/tag
-2. Runs `npm test` — stops if any test fails
-3. Runs `npm run typecheck` and `npm run lint`
-4. Scans the diff for accidentally committed secrets
+### Comprobaciones previas al despliegue (siempre)
+1. Confirma la rama o tag correcto
+2. Ejecuta `npm test` — se detiene si algún test falla
+3. Ejecuta `npm run typecheck` y `npm run lint`
+4. Escanea el diff en busca de secretos confirmados accidentalmente
 
-### Staging deploy
+### Despliegue a staging
 ```bash
 gh workflow run deploy.yml --field environment=staging --field branch={branch}
 gh run watch
 ```
 
-Reports the staging URL and asks you to verify manually.
+Reporta la URL de staging y te pide que verifiques manualmente.
 
-### Production deploy
-**Always pauses and displays:**
+### Despliegue a producción
+**Siempre pausa y muestra:**
 ```
-⚠️  PRODUCTION DEPLOY requested.
-Branch/tag: main
-This will affect real users. Confirm? [yes/no]
+⚠️  DESPLIEGUE A PRODUCCIÓN solicitado.
+Rama/tag: main
+Esto afectará a usuarios reales. ¿Confirmas? [yes/no]
 ```
 
-Only proceeds after your explicit `yes`.
+Solo continúa después de tu `yes` explícito.
 
-## Rules
+## Reglas
 
-- **Never deploys to production without confirmation in this session**
-- **Never skips pre-deploy checks** — if tests fail, stops immediately
-- **Never force-pushes** during deployment
-- Reports the GitHub Actions workflow URL so you can monitor progress
-- If deployment fails: reports the error and logs link — does not attempt to auto-fix
+- **Nunca despliega a producción sin confirmación en esta sesión**
+- **Nunca omite las comprobaciones previas** — si los tests fallan, se detiene inmediatamente
+- **Nunca hace force-push** durante el despliegue
+- Reporta la URL del workflow de GitHub Actions para que puedas monitorear el progreso
+- Si el despliegue falla: reporta el error y el enlace a los logs — no intenta corregirlo automáticamente

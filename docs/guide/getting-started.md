@@ -1,76 +1,76 @@
-# Getting Started
+# Primeros pasos
 
-## What is this?
+## ¿Qué es esto?
 
-**IA Proyecto Base** is a project template for building web applications with AI assistance using Claude Code.
+**IA Proyecto Base** es una plantilla de proyecto para construir aplicaciones web con asistencia de IA usando Claude Code.
 
-It provides:
-- A structured **development workflow** (client → specs → TDD → code → review → deploy)
-- **Slash commands** that activate specialized AI roles at each step
-- **Standards files** that tell Claude exactly how to write code for your stack
-- **Templates** for discovery, user stories, handoffs, and implementation plans
+Proporciona:
+- Un **flujo de desarrollo** estructurado (cliente → specs → TDD → código → revisión → despliegue)
+- **Slash commands** que activan roles especializados de IA en cada paso
+- **Archivos de estándares** que le indican a Claude exactamente cómo escribir código para tu stack
+- **Plantillas** para discovery, historias de usuario, handoffs y planes de implementación
 
-The tech stack is **Nuxt 4** (fullstack), **Vue 3**, **Pinia**, **PrimeVue 4**, **Prisma 7**, **Vitest**, and **Playwright** — all pre-configured in the standards files.
+El stack tecnológico es **Nuxt 4** (fullstack), **Vue 3**, **Pinia**, **PrimeVue 4**, **Prisma 7**, **Vitest** y **Playwright** — todo preconfigurado en los archivos de estándares.
 
-## Prerequisites
+## Prerequisitos
 
-- [Claude Code](https://claude.ai/code) installed (CLI or VS Code extension)
-- [Git](https://git-scm.com/) and a GitHub account
+- [Claude Code](https://claude.ai/code) instalado (CLI o extensión de VS Code)
+- [Git](https://git-scm.com/) y una cuenta de GitHub
 - [Node.js](https://nodejs.org/) v20+
-- [Docker](https://www.docker.com/) (for PostgreSQL in development)
+- [Docker](https://www.docker.com/) (para PostgreSQL en desarrollo)
 
-## Import into your project
+## Importar en tu proyecto
 
 ```bash
-# Clone this template
-git clone https://github.com/dbetancorfp/ia-proyecto-base.git my-project
-cd my-project
+# Clonar esta plantilla
+git clone https://github.com/dbetancorfp/ia-proyecto-base.git mi-proyecto
+cd mi-proyecto
 
-# Remove the template's git history and start fresh
+# Eliminar el historial git de la plantilla y empezar desde cero
 rm -rf .git
 git init
 git add .
 git commit -m "Initial commit from ia-proyecto-base template"
 ```
 
-## Adapt to your project
+## Adaptar a tu proyecto
 
-The files in `ai-specs/specs/` are the core of the template. You need to update them before starting:
+Los archivos en `ai-specs/specs/` son el núcleo de la plantilla. Debes actualizarlos antes de empezar:
 
-| File | What to update |
+| Archivo | Qué actualizar |
 |---|---|
-| `specs/base-standards.mdc` | Core principles — leave as-is unless you have specific rules |
-| `specs/backend-standards.mdc` | Already configured for Nuxt 4 server layer |
-| `specs/frontend-standards.mdc` | Already configured for Vue 3 + Pinia + PrimeVue |
-| `specs/development_guide.md` | Update repo URL and any project-specific setup steps |
-| `specs/api-spec.yml` | Replace the User example with your own domain |
-| `specs/data-model.md` | Replace the User example with your own entities |
+| `specs/base-standards.mdc` | Principios fundamentales — déjalo como está salvo que tengas reglas específicas |
+| `specs/backend-standards.mdc` | Ya configurado para la capa de servidor de Nuxt 4 |
+| `specs/frontend-standards.mdc` | Ya configurado para Vue 3 + Pinia + PrimeVue |
+| `specs/development_guide.md` | Actualiza la URL del repositorio y los pasos de configuración específicos del proyecto |
+| `specs/api-spec.yml` | Reemplaza el ejemplo de User con tu propio dominio |
+| `specs/data-model.md` | Reemplaza el ejemplo de User con tus propias entidades |
 
-## Configure MCPs (optional but recommended)
+## Configurar MCPs (opcional pero recomendado)
 
-The `.claude/settings.json` includes three MCPs:
+El archivo `.claude/settings.json` incluye tres MCPs:
 
 ```json
 {
   "mcpServers": {
-    "github": { ... },          // gh CLI integration
-    "sequential-thinking": { ... },  // structured reasoning
-    "context7": { ... }         // library docs lookup
+    "github": { ... },               // integración con gh CLI
+    "sequential-thinking": { ... },  // razonamiento estructurado
+    "context7": { ... }              // consulta de docs de librerías
   }
 }
 ```
 
-Add your `GITHUB_TOKEN` to `.env.local`:
+Añade tu `GITHUB_TOKEN` a `.env.local`:
 ```bash
-GITHUB_TOKEN=ghp_your_token_here
+GITHUB_TOKEN=ghp_tu_token_aqui
 ```
 
-## Start your first session
+## Iniciar tu primera sesión
 
-Open the project in VS Code with the Claude Code extension, then try:
+Abre el proyecto en VS Code con la extensión de Claude Code y prueba:
 
 ```
 /explain
 ```
 
-Claude will read the standards and give you an overview of the project. From there, follow the [Workflow Overview](/guide/workflow).
+Claude leerá los estándares y te dará una visión general del proyecto. Desde ahí, sigue el [Resumen del flujo de trabajo](/guide/workflow).

@@ -1,67 +1,67 @@
-# Working with GitHub Issues
+# Trabajar con GitHub Issues
 
-All tickets in this project use **GitHub Issues** — no Jira, no Linear.
+Todos los tickets en este proyecto usan **GitHub Issues** — sin Jira, sin Linear.
 
-## Issue ID convention
+## Convención de IDs
 
-GitHub Issues are just numbers (`#42`). In file names and branch names we use the `GH-N` prefix for clarity:
+Los GitHub Issues son simplemente números (`#42`). En nombres de archivos y ramas usamos el prefijo `GH-N` para mayor claridad:
 
-| Context | Format | Example |
+| Contexto | Formato | Ejemplo |
 |---|---|---|
-| Branch name | `feature/GH-N-description` | `feature/GH-42-user-auth` |
-| Plan file | `GH-N_backend.md` | `GH-42_backend.md` |
-| Commit message | `GH-42: Add user auth endpoint` | — |
-| PR body | `Closes #42` | auto-closes issue on merge |
+| Nombre de rama | `feature/GH-N-descripcion` | `feature/GH-42-user-auth` |
+| Archivo del plan | `GH-N_backend.md` | `GH-42_backend.md` |
+| Mensaje de commit | `GH-42: Add user auth endpoint` | — |
+| Cuerpo del PR | `Closes #42` | cierra el issue automáticamente al hacer merge |
 
-## Labels
+## Etiquetas
 
-| Label | Meaning |
+| Etiqueta | Significado |
 |---|---|
-| `needs-refinement` | Story needs enrichment before planning |
-| `pending-validation` | Enriched — waiting for Product Owner approval |
-| `ready` | Approved and ready to plan/implement |
-| `in-progress` | Currently being implemented |
-| `blocked` | Waiting on a dependency or question |
+| `needs-refinement` | La historia necesita enriquecimiento antes de planificar |
+| `pending-validation` | Enriquecida — esperando aprobación del Product Owner |
+| `ready` | Aprobada y lista para planificar/implementar |
+| `in-progress` | En proceso de implementación |
+| `blocked` | Esperando una dependencia o respuesta |
 
-## Workflow with commands
+## Flujo con comandos
 
 ```bash
-# 1. See open issues
+# 1. Ver issues abiertos
 gh issue list
 
-# 2. View a specific issue
+# 2. Ver un issue específico
 gh issue view 42
 
-# 3. Enrich a rough issue (adds acceptance criteria)
+# 3. Enriquecer un issue sin detalle (añade criterios de aceptación)
 /enrich-us 42
 
-# 4. Generate backend implementation plan
+# 4. Generar plan de implementación backend
 /plan-backend-ticket 42
 
-# 5. Generate frontend implementation plan
+# 5. Generar plan de implementación frontend
 /plan-frontend-ticket 42
 
-# 6. Implement
+# 6. Implementar
 /develop-backend ai-specs/changes/GH-42_backend.md
 
-# 7. Review before merge
+# 7. Revisar antes del merge
 /review-pr 42
 
-# 8. Commit + PR (auto-closes issue)
+# 8. Commit + PR (cierra el issue automáticamente)
 /commit
 ```
 
-## Session handoffs
+## Handoffs de sesión
 
-When you need to stop mid-feature and resume later, save the session state:
+Cuando necesitas parar a mitad de una funcionalidad y retomar más tarde, guarda el estado de la sesión:
 
 ```
-Save the current session state to .claude/sessions/context_session_GH-42.md
-Follow the template in ai-specs/handoffs/_template.md
+Guarda el estado actual de la sesión en .claude/sessions/context_session_GH-42.md
+Sigue la plantilla en ai-specs/handoffs/_template.md
 ```
 
-To resume:
+Para retomar:
 ```
-Read .claude/sessions/context_session_GH-42.md and resume where we left off.
-Confirm the next step before writing any code.
+Lee .claude/sessions/context_session_GH-42.md y retoma donde lo dejamos.
+Confírmame el siguiente paso antes de escribir cualquier código.
 ```

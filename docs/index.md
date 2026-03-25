@@ -3,38 +3,38 @@ layout: home
 
 hero:
   name: IA Proyecto Base
-  text: AI-assisted development, from client to production.
-  tagline: A ready-to-use template for building web apps with Nuxt 4, guided by Claude Code and the man-in-the-loop philosophy.
+  text: Desarrollo asistido por IA, del cliente a producción.
+  tagline: Una plantilla lista para usar para construir aplicaciones web con Nuxt 4, guiada por Claude Code y la filosofía man-in-the-loop.
   actions:
     - theme: brand
-      text: Get Started
+      text: Comenzar
       link: /guide/getting-started
     - theme: alt
-      text: View on GitHub
+      text: Ver en GitHub
       link: https://github.com/dbetancorfp/ia-proyecto-base
 
 features:
   - icon: 🔄
-    title: Full Development Workflow
-    details: From client interviews and Figma analysis to TDD, code review, and deploy — every step has a defined role, prompt, and artefact.
+    title: Flujo de desarrollo completo
+    details: De entrevistas con el cliente y análisis de Figma hasta TDD, revisión de código y despliegue — cada paso tiene un rol, un prompt y un artefacto definidos.
 
   - icon: 🤖
     title: Slash Commands
-    details: /enrich-us, /plan-backend-ticket, /develop-frontend, /review-pr, /commit — one command per workflow step, no guesswork.
+    details: /enrich-us, /plan-backend-ticket, /develop-frontend, /review-pr, /commit — un comando por paso del flujo, sin adivinanzas.
 
   - icon: 🧑‍✈️
     title: Man-in-the-loop
-    details: Claude proposes, you decide. Every irreversible action waits for your explicit approval. You are the director, not the passenger.
+    details: Claude propone, tú decides. Cada acción irreversible espera tu aprobación explícita. Tú eres el director, no el pasajero.
 
   - icon: 🏗️
     title: Nuxt 4 + DDD
-    details: Server layer with Nitro/H3, Domain-Driven Design mapped to server/, Prisma 7, Valibot validation, and Vitest tests.
+    details: Capa de servidor con Nitro/H3, Domain-Driven Design mapeado a server/, Prisma 7, validación con Valibot y tests con Vitest.
 
   - icon: 🎨
     title: Vue 3 + PrimeVue
-    details: Script setup SFCs, Pinia stores, PrimeVue 4 components, Playwright E2E tests, and file-based routing out of the box.
+    details: SFCs con script setup, stores con Pinia, componentes PrimeVue 4, tests E2E con Playwright y enrutamiento basado en archivos.
 
   - icon: 🐙
-    title: GitHub-native
-    details: GitHub Issues for tickets, GitHub CLI for all operations, GitHub Actions for CI/CD and automatic docs deployment.
+    title: GitHub nativo
+    details: GitHub Issues para tickets, GitHub CLI para todas las operaciones, GitHub Actions para CI/CD y despliegue automático de documentación.
 ---

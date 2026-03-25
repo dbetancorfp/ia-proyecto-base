@@ -1,58 +1,59 @@
-# Documentation Standards
+# Estándares de documentación
 
-> Full reference: `ai-specs/specs/documentation-standards.mdc`
+> Referencia completa: `ai-specs/specs/documentation-standards.mdc`
 
-## Sources of truth
+## Fuentes de verdad
 
-| Document | Updated when |
+| Documento | Se actualiza cuando |
 |---|---|
-| `api-spec.yml` | An API endpoint is added, changed, or removed |
-| `data-model.md` | A Prisma model is added or modified |
-| `backend-standards.mdc` | A new backend pattern or convention is established |
-| `frontend-standards.mdc` | A new frontend pattern or convention is established |
-| VitePress docs (`docs/`) | A new guide, standard, or command is worth documenting publicly |
+| `api-spec.yml` | Se añade, cambia o elimina un endpoint de API |
+| `data-model.md` | Se añade o modifica un modelo de Prisma |
+| `backend-standards.mdc` | Se establece un nuevo patrón o convención de backend |
+| `frontend-standards.mdc` | Se establece un nuevo patrón o convención de frontend |
+| Docs de VitePress (`docs/`) | Una nueva guía, estándar o comando merece documentarse públicamente |
 
-## Rules
+## Reglas
 
-- **English only** — all technical artifacts, comments, commit messages, and documentation
-- **Update docs in the same PR** as the code change — never leave docs out of sync
-- `/update-docs` command handles this automatically at the end of each implementation step
+- **Solo español en esta web** — el sitio público va en español para la audiencia objetivo
+- **Código, specs e internos en inglés** — commits, nombres de variables, archivos `.mdc`, todo lo técnico sigue en inglés
+- **Actualiza los docs en el mismo PR** que el cambio de código — nunca dejes los docs desincronizados
+- El comando `/update-docs` se encarga de esto automáticamente al final de cada paso de implementación
 
-## VitePress (this site)
+## VitePress (este sitio)
 
-This documentation site is built with [VitePress](https://vitepress.dev) and deployed to GitHub Pages.
+Este sitio de documentación está construido con [VitePress](https://vitepress.dev) y desplegado en GitHub Pages.
 
-### Run locally
+### Ejecutar en local
 
 ```bash
 npm run docs:dev
-# Opens at http://localhost:5173
+# Abre en http://localhost:5173
 ```
 
-### Build
+### Compilar
 
 ```bash
 npm run docs:build
-# Output in docs/.vitepress/dist/
+# Salida en docs/.vitepress/dist/
 ```
 
-### Structure
+### Estructura
 
 ```
 docs/
-├── .vitepress/config.ts   ← Navigation, theme, site metadata
-├── index.md               ← Home page
-├── guide/                 ← How-to guides
-├── standards/             ← Technical standards summaries
-└── commands/              ← Slash command reference
+├── .vitepress/config.ts   ← Navegación, tema, metadatos del sitio
+├── index.md               ← Página de inicio
+├── guide/                 ← Guías de uso
+├── standards/             ← Resúmenes de estándares técnicos
+└── commands/              ← Referencia de slash commands
 ```
 
-### Adding a new page
+### Añadir una nueva página
 
-1. Create the `.md` file in the appropriate section folder
-2. Add it to the `sidebar` in `docs/.vitepress/config.ts`
-3. Link to it from a relevant existing page
+1. Crea el archivo `.md` en la carpeta de sección correspondiente
+2. Añádelo al `sidebar` en `docs/.vitepress/config.ts`
+3. Enlázalo desde una página existente relevante
 
-### Deployment
+### Despliegue
 
-Pushes to `main` trigger the GitHub Actions workflow at `.github/workflows/docs.yml`, which builds and publishes to GitHub Pages automatically.
+Los pushes a `main` disparan el workflow de GitHub Actions en `.github/workflows/docs.yml`, que compila y publica en GitHub Pages automáticamente.

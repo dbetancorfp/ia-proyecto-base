@@ -1,56 +1,56 @@
 # /review-pr
 
-Performs a pre-merge code review combining tech lead, QA, and security perspectives. Posts the result as a PR comment.
+Realiza una revisión de código previa al merge combinando las perspectivas de tech lead, QA y seguridad. Publica el resultado como comentario en el PR.
 
-## Usage
+## Uso
 
 ```
 /review-pr 42
 ```
 
-Also accepts a branch name or PR number:
+También acepta un nombre de rama o número de PR:
 
 ```
 /review-pr feature/GH-42-backend
 /review-pr 137
 ```
 
-## What it checks
+## Qué comprueba
 
-**Server layer (Nuxt `server/`):**
-- DDD layers respected (no Prisma in services, no logic in H3 handlers)
-- Valibot validation present before DB operations
-- `createError()` with correct HTTP status codes
+**Capa de servidor (Nuxt `server/`):**
+- Capas DDD respetadas (sin Prisma en servicios, sin lógica en manejadores H3)
+- Validación con Valibot presente antes de operaciones de base de datos
+- `createError()` con códigos de estado HTTP correctos
 
-**Frontend layer (Nuxt `app/`):**
-- `<script setup lang="ts">` — no Options API
-- PrimeVue components used appropriately
-- No `window`/`document` outside `onMounted`
+**Capa frontend (Nuxt `app/`):**
+- `<script setup lang="ts">` — sin Options API
+- Componentes de PrimeVue usados apropiadamente
+- Sin `window`/`document` fuera de `onMounted`
 
-**Both:**
-- TypeScript strict typing (no `any`)
-- No `console.log` in production paths
-- Descriptive naming, DRY
+**Ambas capas:**
+- Tipado estricto de TypeScript (sin `any`)
+- Sin `console.log` en rutas de producción
+- Nomenclatura descriptiva, DRY
 
 **Tests:**
-- AAA pattern, descriptive names
-- Happy path + error paths covered
-- 90% coverage threshold
+- Patrón AAA, nombres descriptivos
+- Casos de éxito + casos de error cubiertos
+- Umbral de cobertura del 90%
 
-**Security:**
-- No hardcoded secrets
-- Auth middleware on protected routes
-- Parameterized Prisma queries
+**Seguridad:**
+- Sin secretos hardcodeados
+- Middleware de autenticación en rutas protegidas
+- Queries de Prisma parametrizadas
 
-**Documentation:**
-- `api-spec.yml` updated if endpoints changed
-- `data-model.md` updated if schema changed
+**Documentación:**
+- `api-spec.yml` actualizado si cambiaron endpoints
+- `data-model.md` actualizado si cambió el esquema
 
-## Verdicts
+## Veredictos
 
-| Verdict | Meaning |
+| Veredicto | Significado |
 |---|---|
-| `APPROVE` | All checks passed — `gh pr review --approve` |
-| `APPROVE WITH NOTES` | Minor warnings — address before next sprint |
-| `REQUEST CHANGES` | Issues found — must fix before merge |
-| `BLOCK` | Blocking issue — do not merge |
+| `APPROVE` | Todos los checks pasados — `gh pr review --approve` |
+| `APPROVE WITH NOTES` | Advertencias menores — abordar antes del próximo sprint |
+| `REQUEST CHANGES` | Problemas encontrados — deben corregirse antes del merge |
+| `BLOCK` | Problema bloqueante — no hacer merge |

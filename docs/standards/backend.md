@@ -1,48 +1,48 @@
-# Backend Standards — Nuxt Server Layer
+# Estándares de backend — Capa de servidor Nuxt
 
-> Full reference: `ai-specs/specs/backend-standards.mdc`
+> Referencia completa: `ai-specs/specs/backend-standards.mdc`
 
 ## Stack
 
-| Technology | Role |
+| Tecnología | Rol |
 |---|---|
-| **Nuxt 4 / Nitro** | Server engine — replaces Express |
-| **H3** | HTTP event handlers — replaces Express controllers |
-| **TypeScript 5** | Strict mode throughout |
-| **Prisma 7** | ORM with `@prisma/adapter-pg` |
-| **PostgreSQL** | Database (Docker in dev) |
-| **Valibot** | Request validation |
-| **Vitest** | Unit testing (replaces Jest) |
+| **Nuxt 4 / Nitro** | Motor del servidor — reemplaza Express |
+| **H3** | Manejadores de eventos HTTP — reemplaza los controladores de Express |
+| **TypeScript 5** | Modo estricto en todo el código |
+| **Prisma 7** | ORM con `@prisma/adapter-pg` |
+| **PostgreSQL** | Base de datos (Docker en desarrollo) |
+| **Valibot** | Validación de requests |
+| **Vitest** | Tests unitarios (reemplaza Jest) |
 
-## DDD Layer Map
+## Mapa de capas DDD
 
 ```
-server/api/            ← Presentation: H3 route handlers
-server/services/       ← Application: business logic
-server/domain/         ← Domain: entities + repository interfaces
-server/infrastructure/ ← Infrastructure: Prisma implementations
-server/db/prisma/      ← Schema, migrations, seed
+server/api/            ← Presentación: manejadores de rutas H3
+server/services/       ← Aplicación: lógica de negocio
+server/domain/         ← Dominio: entidades + interfaces de repositorio
+server/infrastructure/ ← Infraestructura: implementaciones con Prisma
+server/db/prisma/      ← Esquema, migraciones, seed
 ```
 
-## Key rules
+## Reglas clave
 
-### H3 route handlers are thin
+### Los manejadores H3 son delgados
 ```typescript
 // server/api/users/index.post.ts
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const validated = parse(CreateUserSchema, body)         // validate
-  const user = await getUserService().create(validated)   // delegate
-  return { data: user }                                   // return
+  const validated = parse(CreateUserSchema, body)         // validar
+  const user = await getUserService().create(validated)   // delegar
+  return { data: user }                                   // devolver
 })
 ```
-No business logic in handlers. Parse → validate → call service → return.
+Sin lógica de negocio en los manejadores. Parsear → validar → llamar al servicio → devolver.
 
-### Services never touch H3 or Prisma
+### Los servicios nunca tocan H3 ni Prisma
 ```typescript
 // server/services/userService.ts
 export class UserService {
-  constructor(private repo: IUserRepository) {}  // interface, not Prisma
+  constructor(private repo: IUserRepository) {}  // interfaz, no Prisma
 
   async create(data: CreateUserData) {
     const existing = await this.repo.findByEmail(data.email)
@@ -52,32 +52,32 @@ export class UserService {
 }
 ```
 
-### Only the infrastructure layer imports Prisma
+### Solo la capa de infraestructura importa Prisma
 ```typescript
 // server/infrastructure/repositories/PrismaUserRepository.ts
-import { prisma } from '../../utils/prisma'   // ← only here
+import { prisma } from '../../utils/prisma'   // ← solo aquí
 
 export class PrismaUserRepository implements IUserRepository {
   async findById(id: number) {
     const record = await prisma.user.findUnique({ where: { id } })
-    return record ? new User(record) : null    // always map to domain entity
+    return record ? new User(record) : null    // siempre mapear a entidad de dominio
   }
 }
 ```
 
-### Soft deletes only — never hard DELETE
+### Solo soft deletes — nunca DELETE directo
 ```prisma
 model User {
-  deletedAt DateTime?   // set this instead of deleting the row
+  deletedAt DateTime?   // asignar esto en lugar de eliminar el registro
 }
 ```
 
 ## Testing
 
-- **Tool**: Vitest
-- **Coverage threshold**: 90% branches, functions, lines, statements
-- **Pattern**: AAA (Arrange, Act, Assert)
-- **Mock repositories** in service tests — never mock Prisma directly
+- **Herramienta**: Vitest
+- **Umbral de cobertura**: 90% en ramas, funciones, líneas y sentencias
+- **Patrón**: AAA (Arrange, Act, Assert)
+- **Mockear repositorios** en tests de servicios — nunca mockear Prisma directamente
 
 ```typescript
 describe('UserService.create', () => {

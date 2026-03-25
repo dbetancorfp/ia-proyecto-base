@@ -1,62 +1,62 @@
-# AI Roles
+# Roles de IA
 
-Claude can wear different hats depending on the workflow step. The key is giving it the right context and activation prompt for each role.
+Claude puede adoptar distintos roles según el paso del flujo de trabajo. La clave es darle el contexto y el prompt de activación correctos para cada rol.
 
-## Role map
+## Mapa de roles
 
-| Step | Your hat | Claude's hat | Activation |
+| Paso | Tu sombrero | Sombrero de Claude | Activación |
 |---|---|---|---|
-| Client meeting | Interviewer | Business Analyst | Direct prompt with notes |
-| Figma review | UX Researcher | UX Analyst | Direct prompt with screenshots |
-| Specs | Product Owner | BA + Architect | `/enrich-us`, `/plan-*-ticket` |
-| TDD | Tech Lead / QA | QA Engineer | `/develop-backend`, `/develop-frontend` |
-| Code | Tech Lead | Developer | Plan file reference |
-| Review | Reviewer | DevSec + QA | `/review-pr` |
-| Deploy | Director | DevOps | `/deploy` |
+| Reunión con cliente | Entrevistador | Analista de Negocio | Prompt directo con notas |
+| Revisión de Figma | Investigador UX | Analista UX | Prompt directo con capturas |
+| Specs | Product Owner | BA + Arquitecto | `/enrich-us`, `/plan-*-ticket` |
+| TDD | Tech Lead / QA | Ingeniero QA | `/develop-backend`, `/develop-frontend` |
+| Código | Tech Lead | Desarrollador | Referencia al archivo del plan |
+| Revisión | Revisor | DevSec + QA | `/review-pr` |
+| Despliegue | Director | DevOps | `/deploy` |
 
-## Specialized agents
+## Agentes especializados
 
-The `.agents/` folder defines five specialized roles. Claude adopts them automatically when you run the corresponding command.
+La carpeta `.agents/` define cinco roles especializados. Claude los adopta automáticamente cuando ejecutas el comando correspondiente.
 
 ### `product-strategy-analyst`
-Activated during discovery. Analyses client notes, identifies value propositions, surfaces gaps in the user story.
+Se activa durante el discovery. Analiza las notas del cliente, identifica propuestas de valor y detecta vacíos en la historia de usuario.
 
 ### `backend-developer`
-Activated by `/plan-backend-ticket`. Plans the server layer implementation following DDD layers (`server/api/` → `server/services/` → `server/domain/` → `server/infrastructure/`). **Never implements** — only plans.
+Se activa con `/plan-backend-ticket`. Planifica la implementación de la capa de servidor siguiendo las capas DDD (`server/api/` → `server/services/` → `server/domain/` → `server/infrastructure/`). **Nunca implementa** — solo planifica.
 
 ### `frontend-developer`
-Activated by `/plan-frontend-ticket`. Plans the Vue 3 + Pinia + PrimeVue implementation. **Never implements** — only plans.
+Se activa con `/plan-frontend-ticket`. Planifica la implementación de Vue 3 + Pinia + PrimeVue. **Nunca implementa** — solo planifica.
 
 ### `qa-engineer`
-Activated during TDD steps. Generates Vitest unit tests and Playwright E2E tests from acceptance criteria. Works from the spec, not from the code.
+Se activa durante los pasos de TDD. Genera tests unitarios con Vitest y tests E2E con Playwright a partir de los criterios de aceptación. Trabaja a partir del spec, no del código.
 
 ### `security-reviewer`
-Activated by `/review-pr`. Audits the diff for OWASP Top 10, hardcoded secrets, missing auth middleware, and unvalidated input.
+Se activa con `/review-pr`. Audita el diff buscando el OWASP Top 10, secretos hardcodeados, middleware de autenticación faltante e inputs sin validar.
 
-## Activating a role manually
+## Activar un rol manualmente
 
-You don't always need a slash command. You can activate any role with a direct prompt:
-
-```
-Act as the backend-developer agent defined in ai-specs/.agents/backend-developer.md
-Read issue #42 with: gh issue view 42
-Propose a step-by-step plan for the server layer.
-Do NOT write any code yet.
-```
+No siempre necesitas un slash command. Puedes activar cualquier rol con un prompt directo:
 
 ```
-Act as the security-reviewer agent.
-Review the diff on branch feature/GH-42-backend
-against the OWASP Top 10 checklist.
+Actúa como el agente backend-developer definido en ai-specs/.agents/backend-developer.md
+Lee el issue #42 con: gh issue view 42
+Propón un plan paso a paso para la capa de servidor.
+NO escribas ningún código todavía.
 ```
 
-## Your role: Director
-
-With AI, your primary role shifts from **doing** to **directing and validating**.
-
 ```
-Without AI:  You write code → review → fix
-With AI:     You define what → Claude does → you validate → approve or correct
+Actúa como el agente security-reviewer.
+Revisa el diff de la rama feature/GH-42-backend
+contra el checklist OWASP Top 10.
 ```
 
-This is the man-in-the-loop philosophy: **Claude proposes, you decide. Never the other way around.**
+## Tu rol: Director
+
+Con IA, tu rol principal pasa de **hacer** a **dirigir y validar**.
+
+```
+Sin IA:   Tú escribes código → revisas → corriges
+Con IA:   Tú defines qué → Claude hace → tú validas → apruebas o corriges
+```
+
+Esta es la filosofía man-in-the-loop: **Claude propone, tú decides. Nunca al revés.**

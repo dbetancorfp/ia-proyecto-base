@@ -1,24 +1,24 @@
-# Standards Overview
+# Resumen de estándares
 
-The `ai-specs/specs/` folder contains the technical standards that Claude reads automatically at the start of every session (via `CLAUDE.md → base-standards.mdc`).
+La carpeta `ai-specs/specs/` contiene los estándares técnicos que Claude lee automáticamente al inicio de cada sesión (a través de `CLAUDE.md → base-standards.mdc`).
 
-## Files
+## Archivos
 
-| File | Purpose |
+| Archivo | Propósito |
 |---|---|
-| `base-standards.mdc` | Core principles: TDD, type safety, English-only, incremental changes |
-| `backend-standards.mdc` | Nuxt 4 server layer: Nitro/H3, DDD, Prisma, Valibot, Vitest |
+| `base-standards.mdc` | Principios fundamentales: TDD, tipado estricto, solo inglés en código, cambios incrementales |
+| `backend-standards.mdc` | Capa de servidor Nuxt 4: Nitro/H3, DDD, Prisma, Valibot, Vitest |
 | `frontend-standards.mdc` | Vue 3, Pinia, PrimeVue, composables, Playwright |
-| `documentation-standards.mdc` | Docs structure, API spec maintenance, VitePress |
-| `api-spec.yml` | OpenAPI 3.0 contract — updated as endpoints are added |
-| `data-model.md` | Domain entities, Prisma schema, relationships |
-| `development_guide.md` | Environment setup, scripts, project structure |
+| `documentation-standards.mdc` | Estructura de docs, mantenimiento del API spec, VitePress |
+| `api-spec.yml` | Contrato OpenAPI 3.0 — se actualiza conforme se añaden endpoints |
+| `data-model.md` | Entidades de dominio, esquema de Prisma, relaciones |
+| `development_guide.md` | Configuración del entorno, scripts, estructura del proyecto |
 
-## How Claude uses them
+## Cómo los usa Claude
 
-`CLAUDE.md` is a symlink to `base-standards.mdc`. Claude Code loads it automatically and applies all rules in every session — no need to paste instructions manually.
+`CLAUDE.md` es un symlink a `base-standards.mdc`. Claude Code lo carga automáticamente y aplica todas las reglas en cada sesión — sin necesidad de pegar instrucciones manualmente.
 
-The `globs` field in each `.mdc` file tells Claude which files each standard applies to:
+El campo `globs` en cada archivo `.mdc` indica a Claude a qué archivos aplica cada estándar:
 
 ```yaml
 ---
@@ -27,9 +27,9 @@ alwaysApply: true
 ---
 ```
 
-## Adapting to your project
+## Adaptar a tu proyecto
 
-1. **Replace the examples** in `api-spec.yml` and `data-model.md` with your own domain
-2. **Keep `base-standards.mdc` as-is** — it contains universal principles
-3. **Update `development_guide.md`** with your repo URL and any custom setup steps
-4. **Add project-specific rules** to `backend-standards.mdc` or `frontend-standards.mdc` as you discover patterns
+1. **Reemplaza los ejemplos** en `api-spec.yml` y `data-model.md` con tu propio dominio
+2. **Deja `base-standards.mdc` como está** — contiene principios universales
+3. **Actualiza `development_guide.md`** con la URL de tu repositorio y los pasos de configuración personalizados
+4. **Añade reglas específicas del proyecto** a `backend-standards.mdc` o `frontend-standards.mdc` conforme descubras patrones

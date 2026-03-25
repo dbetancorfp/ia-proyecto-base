@@ -1,52 +1,52 @@
-# Session Handoffs
+# Handoffs de sesión
 
-Claude Code does not retain memory between sessions by default. Handoffs let you save the state of in-progress work so you can resume exactly where you left off.
+Claude Code no retiene memoria entre sesiones por defecto. Los handoffs te permiten guardar el estado del trabajo en curso para poder retomarlo exactamente donde lo dejaste.
 
-## How it works
+## Cómo funciona
 
-At the end of a session, Claude saves a context file to `.claude/sessions/`. At the start of the next session, you point Claude to that file.
+Al final de una sesión, Claude guarda un archivo de contexto en `.claude/sessions/`. Al inicio de la siguiente sesión, apuntas a Claude a ese archivo.
 
-These files are **gitignored** — they are working documents, not source of truth.
+Estos archivos están en el **gitignore** — son documentos de trabajo, no fuente de verdad.
 
-## Saving a handoff
-
-```
-Save the current session state to .claude/sessions/context_session_GH-42.md
-Follow the template in ai-specs/handoffs/_template.md
-```
-
-Or use the template directly — the file captures:
-- Current branch and last completed step
-- Completed and in-progress tasks
-- Key decisions made
-- Open questions to resolve
-- Important context (soft deletes, auth paths, etc.)
-
-## Resuming a session
+## Guardar un handoff
 
 ```
-Read .claude/sessions/context_session_GH-42.md and resume where we left off.
-Before writing any code, tell me what the next step is and confirm.
+Guarda el estado actual de la sesión en .claude/sessions/context_session_GH-42.md
+Sigue la plantilla en ai-specs/handoffs/_template.md
 ```
 
-## Handoff template
+O usa la plantilla directamente — el archivo captura:
+- Rama actual y último paso completado
+- Tareas completadas y en curso
+- Decisiones clave tomadas
+- Preguntas abiertas a resolver
+- Contexto importante (soft deletes, rutas de auth, etc.)
 
-See `ai-specs/handoffs/_template.md` for the full structure. Key sections:
+## Retomar una sesión
+
+```
+Lee .claude/sessions/context_session_GH-42.md y retoma donde lo dejamos.
+Antes de escribir cualquier código, dime cuál es el siguiente paso y confírmalo.
+```
+
+## Plantilla de handoff
+
+Consulta `ai-specs/handoffs/_template.md` para la estructura completa. Secciones clave:
 
 ```markdown
 # Handoff: {feature} — GH-N
 
-## Status at End of Session
-## Completed This Session
-## In Progress (Incomplete)
-## Next Step (Start Here Next Session)
-## Key Decisions Made
-## Open Questions
-## Important Context
-## Files Modified
-## How to Resume
+## Estado al final de la sesión
+## Completado esta sesión
+## En progreso (incompleto)
+## Siguiente paso (empieza aquí la próxima sesión)
+## Decisiones clave tomadas
+## Preguntas abiertas
+## Contexto importante
+## Archivos modificados
+## Cómo retomar
 ```
 
-## Longer handoffs: the `changes/` folder
+## Handoffs más largos: la carpeta `changes/`
 
-For multi-session features, the implementation plan in `ai-specs/changes/GH-N_backend.md` also serves as a handoff — it tracks which steps are done and what comes next. Keep it updated as you progress.
+Para funcionalidades de múltiples sesiones, el plan de implementación en `ai-specs/changes/GH-N_backend.md` también sirve como handoff — registra qué pasos están hechos y cuáles vienen a continuación. Mantenlo actualizado a medida que avanzas.

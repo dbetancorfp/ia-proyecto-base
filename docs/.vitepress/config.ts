@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'IA Proyecto Base',
-  description: 'Base project for AI-assisted web development with Nuxt 4, Vue 3, Pinia and PrimeVue.',
+  description: 'Plantilla base para desarrollo web asistido por IA con Nuxt 4, Vue 3, Pinia y PrimeVue.',
 
   base: '/ia-proyecto-base/',
 
@@ -12,9 +12,9 @@ export default defineConfig({
     logo: '/logo.svg',
 
     nav: [
-      { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Standards', link: '/standards/' },
-      { text: 'Commands', link: '/commands/' },
+      { text: 'Guía', link: '/guide/getting-started' },
+      { text: 'Estándares', link: '/standards/' },
+      { text: 'Comandos', link: '/commands/' },
       {
         text: 'GitHub',
         link: 'https://github.com/dbetancorfp/ia-proyecto-base',
@@ -24,30 +24,30 @@ export default defineConfig({
     sidebar: {
       '/guide/': [
         {
-          text: 'Introduction',
+          text: 'Introducción',
           items: [
-            { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Workflow Overview', link: '/guide/workflow' },
-            { text: 'AI Roles', link: '/guide/roles' },
+            { text: 'Primeros pasos', link: '/guide/getting-started' },
+            { text: 'Flujo de trabajo', link: '/guide/workflow' },
+            { text: 'Roles de IA', link: '/guide/roles' },
           ],
         },
         {
-          text: 'Day-to-day',
+          text: 'Día a día',
           items: [
-            { text: 'Working with GitHub Issues', link: '/guide/github-issues' },
-            { text: 'Session Handoffs', link: '/guide/handoffs' },
+            { text: 'GitHub Issues', link: '/guide/github-issues' },
+            { text: 'Handoffs de sesión', link: '/guide/handoffs' },
           ],
         },
       ],
 
       '/standards/': [
         {
-          text: 'Standards',
+          text: 'Estándares',
           items: [
-            { text: 'Overview', link: '/standards/' },
+            { text: 'Resumen', link: '/standards/' },
             { text: 'Backend — Nuxt Server', link: '/standards/backend' },
             { text: 'Frontend — Vue + Pinia + PrimeVue', link: '/standards/frontend' },
-            { text: 'Documentation', link: '/standards/documentation' },
+            { text: 'Documentación', link: '/standards/documentation' },
           ],
         },
       ],
@@ -56,7 +56,7 @@ export default defineConfig({
         {
           text: 'Slash Commands',
           items: [
-            { text: 'Overview', link: '/commands/' },
+            { text: 'Resumen', link: '/commands/' },
             { text: '/enrich-us', link: '/commands/enrich-us' },
             { text: '/plan-backend-ticket', link: '/commands/plan-backend-ticket' },
             { text: '/plan-frontend-ticket', link: '/commands/plan-frontend-ticket' },
@@ -85,7 +85,7 @@ export default defineConfig({
 
     editLink: {
       pattern: 'https://github.com/dbetancorfp/ia-proyecto-base/edit/main/docs/:path',
-      text: 'Edit this page on GitHub',
+      text: 'Editar esta página en GitHub',
     },
   },
 })
