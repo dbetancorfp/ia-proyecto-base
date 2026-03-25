@@ -1,5 +1,6 @@
 {
   "name": "ia-proyecto-base",
+  "type": "module",
   "private": true,
   "scripts": {
     "docs:dev": "vitepress dev docs",
