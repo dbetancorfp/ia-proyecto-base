@@ -4,8 +4,7 @@ export default defineConfig({
   title: 'IA Proyecto Base',
   description: 'Base project for AI-assisted web development with Nuxt 4, Vue 3, Pinia and PrimeVue.',
 
-  // Update with your GitHub Pages URL:
-  // base: '/your-repo-name/',
+  base: '/ia-proyecto-base/',
 
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
 
