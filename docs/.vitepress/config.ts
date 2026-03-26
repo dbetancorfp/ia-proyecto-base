@@ -1,12 +1,15 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   title: 'IA Proyecto Base',
   description: 'Plantilla base para desarrollo web asistido por IA con Nuxt 4, Vue 3, Pinia y PrimeVue.',
 
   base: '/ia-proyecto-base/',
 
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+
+  mermaid: {},
 
   themeConfig: {
     logo: '/logo.svg',
@@ -88,4 +91,4 @@ export default defineConfig({
       text: 'Editar esta página en GitHub',
     },
   },
-})
+}))
