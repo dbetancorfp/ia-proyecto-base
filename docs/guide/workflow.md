@@ -137,7 +137,7 @@ flowchart TD
     START(["🚀 Nueva funcionalidad"])
 
     subgraph CFG["⚙️ CONTEXTO DE SESIÓN — siempre activo"]
-        CFG1["CLAUDE.md ──▶ ai-specs/specs/base-standards.mdc\n.claude/settings.json ──▶ MCPs: github · sequential-thinking · context7\nai-specs/specs/backend-standards.mdc  ·  frontend-standards.mdc"]
+        CFG1["CLAUDE.md → base-standards.mdc\n.claude/settings.json → MCPs: github · sequential-thinking · context7\nbackend-standards.mdc · frontend-standards.mdc"]
     end
 
     START --> CFG --> P1
@@ -146,9 +146,9 @@ flowchart TD
         P1_WHO(["👤 Tú: BA + UX Researcher\n🤖 Claude: Analista"])
         P1_A["Reunión con cliente\nCaptura de requisitos"]
         P1_B["Análisis de pantallas Figma\nIdentificación de gaps y edge cases"]
-        P1_AG(["🤖 Agente:\nproduct-strategy-analyst.md"])
-        P1_D{"¿Requisitos\ncompletos?"}
-        P1_F[/"📄 ai-specs/discovery/client-interviews/session-N.md\n📄 ai-specs/discovery/figma-analysis/feature-N.md"/]
+        P1_AG(["🤖 Agente: product-strategy-analyst"])
+        P1_D{"Requisitos\ncompletos?"}
+        P1_F["📄 client-interviews/session-N.md\n📄 figma-analysis/feature-N.md"]
 
         P1_WHO --> P1_A --> P1_B --> P1_AG --> P1_D
         P1_D -- "No" --> P1_A
@@ -160,15 +160,15 @@ flowchart TD
     subgraph P2["📋 FASE 2 · Specs y Planificación"]
         P2_WHO(["👤 Tú: Product Owner\n🤖 Claude: BA + Arquitecto"])
         P2_A["gh issue create\nIssue #N · label: needs-refinement"]
-        P2_B["/enrich-us #N\nLee: gh issue view #N\nEscribe: issue body enriquecido\nCambia label ──▶ pending-validation"]
-        P2_AG1(["🤖 Agente:\nproduct-strategy-analyst.md"])
+        P2_B["/enrich-us #N\nLee: gh issue view #N\nLabel → pending-validation"]
+        P2_AG1(["🤖 Agente: product-strategy-analyst"])
         P2_D1{"👤 PO valida\nhistoria enriquecida"}
         P2_C["/plan-backend-ticket #N\nLee: Issue · backend-standards.mdc"]
-        P2_AG2(["🤖 Agente:\nbackend-developer.md"])
+        P2_AG2(["🤖 Agente: backend-developer"])
         P2_E["/plan-frontend-ticket #N\nLee: Issue · frontend-standards.mdc"]
-        P2_AG3(["🤖 Agente:\nfrontend-developer.md"])
+        P2_AG3(["🤖 Agente: frontend-developer"])
         P2_D2{"👤 Tech Lead revisa\nambos planes"}
-        P2_F[/"📄 GitHub Issue #N (enriquecido, label: ready)\n📄 ai-specs/changes/GH-N_backend.md\n📄 ai-specs/changes/GH-N_frontend.md"/]
+        P2_F["📄 GitHub Issue #N enriquecido - label: ready\n📄 ai-specs/changes/GH-N_backend.md\n📄 ai-specs/changes/GH-N_frontend.md"]
 
         P2_WHO --> P2_A --> P2_B --> P2_AG1 --> P2_D1
         P2_D1 -- "Rechaza" --> P2_B
@@ -178,25 +178,25 @@ flowchart TD
         P2_E --> P2_AG3 --> P2_D2
         P2_D2 -- "Corrige backend" --> P2_C
         P2_D2 -- "Corrige frontend" --> P2_E
-        P2_D2 -- "Aprueba ✅" --> P2_F
+        P2_D2 -- "Aprueba" --> P2_F
     end
 
     P2 --> P3
 
     subgraph P3["🧪 FASE 3 · TDD — Tests primero"]
         P3_WHO(["👤 Tú: Tech Lead / QA\n🤖 Claude: QA Engineer"])
-        P3_AG(["🤖 Agente:\nqa-engineer.md"])
+        P3_AG(["🤖 Agente: qa-engineer"])
         P3_A["Lee GH-N_backend.md · GH-N_frontend.md\nExtrae criterios de aceptación\nMapea criterio → caso de test"]
         P3_D1{"👤 Aprueba\nplan de tests"}
         P3_B["Escribe tests FALLIDOS\nVitest: server/services/__tests__/\nPlaywright: e2e/"]
-        P3_D2{"¿Tests en\n🔴 rojo?"}
-        P3_F[/"📄 server/services/__tests__/*.test.ts\n📄 e2e/*.spec.ts  (todos fallando — correcto en TDD)"/]
+        P3_D2{"Tests en rojo?"}
+        P3_F["📄 server/services/__tests__/feature.test.ts\n📄 e2e/feature.spec.ts\ntodos fallando — correcto en TDD"]
 
         P3_WHO --> P3_AG --> P3_A --> P3_D1
         P3_D1 -- "Rechaza" --> P3_A
         P3_D1 -- "Aprueba" --> P3_B --> P3_D2
         P3_D2 -- "No" --> P3_B
-        P3_D2 -- "Sí ✅" --> P3_F
+        P3_D2 -- "Sí" --> P3_F
     end
 
     P3 --> P4
@@ -204,7 +204,7 @@ flowchart TD
     subgraph P4["💻 FASE 4 · Implementación"]
         P4_WHO(["👤 Tú: Tech Lead — aprueba cada step\n🤖 Claude: Desarrollador"])
 
-        subgraph P4B["🔵 Backend · feature/GH-N-backend"]
+        subgraph P4B["Backend · feature/GH-N-backend"]
             B0["Step 0 · Crear rama"]
             B1["Step 1 · Valibot schema\nserver/domain/schemas/"]
             B2["Step 2 · Domain entity\nserver/domain/entities/"]
@@ -212,16 +212,16 @@ flowchart TD
             B4["Step 4 · Prisma repository\nserver/infrastructure/repositories/"]
             B5["Step 5 · Service method\nserver/services/"]
             B6["Step 6 · H3 route handler\nserver/api/"]
-            B7["npm run test ✅ · typecheck · lint"]
+            B7["npm run test · typecheck · lint"]
             B8["Docs: api-spec.yml · data-model.md"]
             B0-->B1-->B2-->B3-->B4-->B5-->B6-->B7-->B8
         end
 
-        subgraph P4F["🟢 Frontend · feature/GH-N-frontend"]
+        subgraph P4F["Frontend · feature/GH-N-frontend"]
             F0["Step 0 · Crear rama"]
             F1["Step 1 · Pinia Setup Store\napp/stores/"]
             F2["Step 2 · Composable\napp/composables/"]
-            F3["Step 3 · Vue SFCs (PrimeVue)\napp/components/"]
+            F3["Step 3 · Vue SFCs con PrimeVue\napp/components/"]
             F4["Step 4 · Page\napp/pages/"]
             F5["Step 5 · Playwright E2E\ne2e/"]
             F6["Docs: frontend-standards.mdc"]
@@ -235,45 +235,45 @@ flowchart TD
         F6 --> MITL
         MITL -- "Rechaza" --> B1
         MITL -- "Rechaza" --> F1
-        MITL -- "Aprueba ✅" --> P4_F
-        P4_F[/"📁 server/  ·  app/  completos\n📄 api-spec.yml  ·  data-model.md  actualizados"/]
+        MITL -- "Aprueba" --> P4_F
+        P4_F["📁 server/ completo\n📁 app/ completo\n📄 api-spec.yml · data-model.md actualizados"]
     end
 
     P4 --> P5
 
     subgraph P5["🔎 FASE 5 · Revisión Pre-merge"]
         P5_WHO(["👤 Tú: Revisor\n🤖 Claude: Tech Lead + QA + Security"])
-        P5_A["/review-pr #N\ngh pr diff · GH-N_backend.md · GH-N_frontend.md\nbackend-standards.mdc · frontend-standards.mdc\nsecurity-reviewer.md (OWASP Top 10)"]
-        P5_AG(["🤖 Agente:\nsecurity-reviewer.md"])
-        P5_F1[/"📄 ai-specs/changes/GH-N_security-review.md\n💬 Comentario en PR  (gh pr comment)"/]
+        P5_A["/review-pr #N\ngh pr diff · GH-N_backend.md\nbackend-standards.mdc · security-reviewer.md"]
+        P5_AG(["🤖 Agente: security-reviewer\nOWASP Top 10"])
+        P5_F1["📄 GH-N_security-review.md\nComentario en PR via gh pr comment"]
         P5_D{"Veredicto"}
         P5_FIX["Developer corrige\nen rama feature/GH-N-*"]
-        P5_B["/commit\ngit add · commit · push\ngh pr create 'Closes #N'"]
+        P5_B["/commit\ngit add · commit · push\ngh pr create Closes #N"]
         P5_D2{"👤 Merge PR"}
-        P5_F2[/"✅ PR mergeado en main\nIssue #N cerrado automáticamente"/]
+        P5_F2["PR mergeado en main\nIssue #N cerrado automáticamente"]
 
         P5_WHO --> P5_A --> P5_AG --> P5_F1 --> P5_D
         P5_D -- "BLOCK / REQUEST CHANGES" --> P5_FIX --> P4
         P5_D -- "APPROVE" --> P5_B --> P5_D2
         P5_D2 -- "Rechaza" --> P5_A
-        P5_D2 -- "Merge ✅" --> P5_F2
+        P5_D2 -- "Merge" --> P5_F2
     end
 
     P5 --> P6
 
     subgraph P6["🚀 FASE 6 · Despliegue"]
         P6_WHO(["👤 Tú: Director\n🤖 Claude: DevOps"])
-        P6_A["/deploy staging\nnpm test · typecheck · lint · scan secrets\ngh workflow run deploy.yml (staging)"]
+        P6_A["/deploy staging\nnpm test · typecheck · lint · scan secrets\ngh workflow run deploy.yml staging"]
         P6_D1{"👤 Verifica\nen staging"}
-        P6_WARN["⚠️ CONFIRMACIÓN OBLIGATORIA\n'Afecta usuarios reales. Confirm? yes/no'"]
-        P6_NO["❌ Deploy cancelado"]
-        P6_B["/deploy production\ngh workflow run deploy.yml (production)\ngh run watch"]
+        P6_WARN["CONFIRMACION OBLIGATORIA\nAfecta usuarios reales. Confirm yes/no"]
+        P6_NO["Deploy cancelado"]
+        P6_B["/deploy production\ngh workflow run deploy.yml production\ngh run watch"]
         P6_C["curl /health · gh run list\nDeploy report generado"]
-        P6_F[/"✅ Feature en producción\n.github/workflows/deploy.yml ejecutado"/]
+        P6_F["Feature en produccion\n.github/workflows/deploy.yml ejecutado"]
 
         P6_WHO --> P6_A --> P6_D1
-        P6_D1 -- "Falla ❌" --> P4
-        P6_D1 -- "OK ✅" --> P6_WARN
+        P6_D1 -- "Falla" --> P4
+        P6_D1 -- "OK" --> P6_WARN
         P6_WARN -- "no" --> P6_NO
         P6_WARN -- "yes" --> P6_B --> P6_C --> P6_F
     end
@@ -281,16 +281,16 @@ flowchart TD
     P6 --> P7
 
     subgraph P7["📚 Documentación Continua"]
-        DOC1["/update-docs\nSincroniza api-spec.yml · data-model.md\nActualiza docs/ (VitePress)"]
-        DOC2["GitHub Actions · docs.yml\n──▶ GitHub Pages"]
+        DOC1["/update-docs\nSincroniza api-spec.yml · data-model.md\nActualiza docs/ VitePress"]
+        DOC2["GitHub Actions docs.yml\nDeploy a GitHub Pages"]
         DOC1 --> DOC2
     end
 
-    P7 --> DONE(["✅ Funcionalidad en producción\n+ docs actualizadas"])
+    P7 --> DONE(["Funcionalidad en produccion y docs actualizadas"])
 
     subgraph HANDOFF["💾 Handoff entre sesiones"]
-        H1["Fin de sesión:\n.claude/sessions/context_session_GH-N.md\n(plantilla: ai-specs/handoffs/_template.md)"]
-        H2["Inicio siguiente sesión:\nlee context_session_GH-N.md\nretoma desde el step pendiente"]
+        H1["Fin de sesion:\n.claude/sessions/context_session_GH-N.md\nplantilla: ai-specs/handoffs/_template.md"]
+        H2["Inicio siguiente sesion:\nlee context_session_GH-N.md\nretoma desde el step pendiente"]
         H1 --> H2
     end
 ```
