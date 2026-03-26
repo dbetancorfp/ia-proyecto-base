@@ -33,14 +33,13 @@ Run these checks BEFORE deploying:
 git status
 git log --oneline -5
 
-# 2. Run full test suite
-npm test --prefix backend
-npm test --prefix frontend
+# 2. Run full test suite (Nuxt 4 single-repo — no --prefix flags)
+npm test                 # Vitest unit tests
+npm run test:e2e         # Playwright E2E tests
 
 # 3. Run linting and type checks
-npm run lint --prefix backend
-npm run type-check --prefix backend
-npm run lint --prefix frontend
+npm run typecheck        # vue-tsc type check
+npm run lint             # ESLint
 
 # 4. Check for secrets accidentally committed
 git diff HEAD~1 | grep -E "(password|secret|token|key)\s*=" | grep -v "placeholder\|example\|test"
@@ -84,7 +83,7 @@ gh run watch
 gh run list --workflow=deploy.yml --limit 3
 
 # Verify the service is responding
-curl -f {health_check_url}/health || echo "Health check failed"
+curl -f {health_check_url}/api/health || echo "Health check failed"
 ```
 
 ## 5. Summary report
@@ -120,5 +119,6 @@ curl -f {health_check_url}/health || echo "Health check failed"
 
 # References
 
-- `.github/workflows/deploy.yml` — CI/CD pipeline definition
+- `.github/workflows/deploy.yml` — CI/CD pipeline definition (**not yet created** — must be added before using this command)
+- `.github/workflows/docs.yml` — existing workflow (docs only, not app deployment)
 - `ai-specs/specs/backend-standards.mdc` — deployment standards section

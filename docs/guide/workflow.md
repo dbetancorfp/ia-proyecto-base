@@ -147,12 +147,14 @@ flowchart TD
         P1_AG(["Agente: product-strategy-analyst"])
         P1_D{"Requisitos completos?"}
         P1_F["SALIDA\nclient-interviews/session-N.md\nfigma-analysis/feature-N.md"]
+        P1_MITL{"PO valida analisis\nantes de abrir issue"}
         P1_WHO --> P1_A --> P1_B --> P1_AG --> P1_D
         P1_D -- No --> P1_A
-        P1_D -- Si --> P1_F
+        P1_D -- Si --> P1_F --> P1_MITL
+        P1_MITL -- Corrige --> P1_A
     end
 
-    P1_F --> P2_WHO
+    P1_MITL -- Aprueba --> P2_WHO
 
     subgraph P2["FASE 2 · Specs y Planificacion"]
         P2_WHO(["Tu: Product Owner\nClaude: BA + Arquitecto"])
@@ -179,14 +181,14 @@ flowchart TD
 
     P2_F --> P3_WHO
 
-    subgraph P3["FASE 3 · TDD — Tests primero"]
+    subgraph P3["FASE 3 · TDD — Tests primero - activado por /develop-backend y /develop-frontend"]
         P3_WHO(["Tu: Tech Lead / QA\nClaude: QA Engineer"])
         P3_AG(["Agente: qa-engineer"])
         P3_A["Lee GH-N_backend.md y GH-N_frontend.md\nExtrae criterios de aceptacion\nMapea criterio a caso de test"]
         P3_D1{"Aprueba plan de tests"}
-        P3_B["Escribe tests FALLIDOS\nVitest: server/services/__tests__/\nPlaywright: e2e/"]
+        P3_B["Escribe tests FALLIDOS\nVitest: tests/feature.test.ts\nPlaywright: e2e/feature.spec.ts"]
         P3_D2{"Tests en rojo?"}
-        P3_F["SALIDA\nserver/services/__tests__/feature.test.ts\ne2e/feature.spec.ts — todos fallando"]
+        P3_F["SALIDA\ntests/feature.test.ts\ne2e/feature.spec.ts — todos fallando"]
         P3_WHO --> P3_AG --> P3_A --> P3_D1
         P3_D1 -- Rechaza --> P3_A
         P3_D1 -- Aprueba --> P3_B --> P3_D2
@@ -198,10 +200,10 @@ flowchart TD
 
     subgraph P4["FASE 4 · Implementacion"]
         P4_WHO(["Tu: Tech Lead — aprueba cada step\nClaude: Desarrollador"])
-        P4_B0["BACKEND — rama: feature/GH-N-backend\nStep 1: Valibot schema - server/domain/schemas/\nStep 2: Domain entity - server/domain/entities/\nStep 3: Repository interface - server/domain/repositories/\nStep 4: Prisma repository - server/infrastructure/repositories/\nStep 5: Service method - server/services/\nStep 6: H3 route handler - server/api/\nStep 7: npm run test · typecheck · lint\nStep 8: api-spec.yml · data-model.md"]
+        P4_B0["BACKEND — rama: feature/GH-N-backend\nStep 1: Valibot schema - server/domain/schemas/\nStep 2: Domain entity - server/domain/entities/\nStep 3: Repository interface - server/domain/repositories/\nStep 4: Prisma repository - server/infrastructure/repositories/\nStep 5: Service method - server/services/\nStep 6: H3 route handler - server/api/\nStep 7: npm test · npm run test:e2e · typecheck · lint\nStep 8: api-spec.yml · data-model.md"]
         P4_F0["FRONTEND — rama: feature/GH-N-frontend\nStep 1: Pinia Setup Store - app/stores/\nStep 2: Composable - app/composables/\nStep 3: Vue SFCs con PrimeVue - app/components/\nStep 4: Page - app/pages/\nStep 5: Playwright E2E - e2e/\nStep 6: frontend-standards.mdc"]
         MITL{"Man-in-the-loop\naprueba cada step"}
-        P4_OUT["SALIDA\nserver/ completo\napp/ completo\napi-spec.yml y data-model.md actualizados"]
+        P4_OUT["SALIDA\nCommit + PR abierto automaticamente por /develop-backend\nCierra con: Closes #N"]
         P4_WHO --> P4_B0
         P4_WHO --> P4_F0
         P4_B0 --> MITL
@@ -219,13 +221,12 @@ flowchart TD
         P5_AG(["Agente: security-reviewer - OWASP Top 10"])
         P5_F1["GH-N_security-review.md\nComentario en PR via gh pr comment"]
         P5_D{"Veredicto"}
-        P5_FIX["Developer corrige en rama feature/GH-N"]
-        P5_B["/commit\ngit add · commit · push\ngh pr create - Closes N"]
-        P5_D2{"Merge PR"}
+        P5_FIX["Developer corrige en rama feature/GH-N\n/commit para nuevo commit al PR existente"]
+        P5_D2{"gh pr merge\nTu decides el merge"}
         P5_F2["SALIDA\nPR mergeado en main\nIssue N cerrado automaticamente"]
         P5_WHO --> P5_A --> P5_AG --> P5_F1 --> P5_D
-        P5_D -- BLOCK/REQUEST CHANGES --> P5_FIX --> P4_WHO
-        P5_D -- APPROVE --> P5_B --> P5_D2
+        P5_D -- BLOCK/REQUEST CHANGES --> P5_FIX --> P5_A
+        P5_D -- APPROVE --> P5_D2
         P5_D2 -- Rechaza --> P5_A
         P5_D2 -- Merge --> P5_F2
     end
@@ -234,33 +235,36 @@ flowchart TD
 
     subgraph P6["FASE 6 · Despliegue"]
         P6_WHO(["Tu: Director\nClaude: DevOps"])
-        P6_A["/deploy staging\nnpm test · typecheck · lint · scan secrets\ngh workflow run deploy.yml - staging"]
-        P6_D1{"Verifica en staging"}
+        P6_A["/deploy staging\nnpm test · npm run test:e2e · typecheck · lint · scan secrets\ndeploy.yml PENDIENTE DE CREAR en .github/workflows/"]
+        P6_D1{"Verifica manualmente en staging"}
         P6_WARN["CONFIRMACION OBLIGATORIA\nAfecta usuarios reales. Confirmar?"]
         P6_NO(["Deploy cancelado"])
         P6_B["/deploy production\ngh workflow run deploy.yml - production\ngh run watch"]
-        P6_C["curl /health · gh run list\nDeploy report generado"]
+        P6_FIX["Abrir bug fix como nuevo Issue\nNuevo ciclo desde Fase 2"]
+        P6_C["curl /api/health · gh run list\nDeploy report generado"]
         P6_F["SALIDA\nFeature en produccion\n.github/workflows/deploy.yml ejecutado"]
         P6_WHO --> P6_A --> P6_D1
-        P6_D1 -- Falla --> P4_WHO
+        P6_D1 -- Falla → bug --> P6_FIX
         P6_D1 -- OK --> P6_WARN
         P6_WARN -- no --> P6_NO
         P6_WARN -- yes --> P6_B --> P6_C --> P6_F
     end
 
+    P6_FIX --> P2_WHO
+
     P6_F --> P7_A
 
-    subgraph P7["Documentacion Continua"]
+    subgraph P7["Documentacion - solo si cambian docs/ o package.json"]
         P7_A["/update-docs\napi-spec.yml · data-model.md · docs/ VitePress"]
-        P7_B["GitHub Actions docs.yml\nDeploy a GitHub Pages"]
+        P7_B["GitHub Actions docs.yml\nTriggered por cambios en docs/ o package.json\nDeploy a GitHub Pages"]
         P7_A --> P7_B
     end
 
     P7_B --> DONE([Funcionalidad completa en produccion])
 
-    subgraph HANDOFF["Handoff entre sesiones"]
-        H1["Fin de sesion\n.claude/sessions/context_session_GH-N.md\nplantilla: ai-specs/handoffs/_template.md"]
-        H2["Inicio siguiente sesion\nlee context_session_GH-N.md\nretoma desde el step pendiente"]
-        H1 --> H2
-    end
+    HANDOFF_NOTE["HANDOFF — disponible en cualquier fase\nFin de sesion: guarda .claude/sessions/context_session_GH-N.md\nInicio siguiente sesion: lee context_session_GH-N.md\nPlantilla: ai-specs/handoffs/_template.md"]
+    P1_MITL -. sesion interrumpida .-> HANDOFF_NOTE
+    P3_D1 -. sesion interrumpida .-> HANDOFF_NOTE
+    MITL -. sesion interrumpida .-> HANDOFF_NOTE
+    P5_D -. sesion interrumpida .-> HANDOFF_NOTE
 ```
