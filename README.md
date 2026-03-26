@@ -4,6 +4,8 @@ This repository contains a comprehensive set of development rules, standards, an
 
 It's highly recommended to be used along with Spec-Driven Development frameworks like [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 
+📖 **Documentación:** [https://dbetancorfp.github.io/ia-proyecto-base/](https://dbetancorfp.github.io/ia-proyecto-base/)
+
 ## 📁 Repository Structure
 
 ```
