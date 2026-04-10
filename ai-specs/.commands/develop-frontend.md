@@ -64,6 +64,15 @@ When receiving user feedback or corrections:
 
 6. **Apply approved changes**: Once approved, update the rule file(s) exactly as agreed and confirm completion. 
 
+## End of session — save handoff
+
+If the implementation is not complete when ending the session, save context so the next session can resume without losing state:
+
+```
+Copy .claude/sessions/_template.md → .claude/sessions/context_session_GH-$1.md
+Fill in: current step, completed steps, open questions, key decisions, files modified.
+```
+
 # Architecture & best practices
 
 - Use component-driven architecture (Atomic Design or similar)

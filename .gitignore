@@ -8,6 +8,8 @@
 # ─── Claude Code (local only — never commit) ──────────────────────────────────
 .claude/settings.local.json
 .claude/sessions/
+!.claude/sessions/_template.md
+!.claude/sessions/README.md
 .claude/doc/
 
 # ─── Node ─────────────────────────────────────────────────────────────────────

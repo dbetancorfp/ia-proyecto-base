@@ -115,6 +115,15 @@ gh pr create \
 
 > For complex staging (partial files), use `/commit $ISSUE_NUMBER` instead.
 
+## End of session — save handoff
+
+If the implementation is not complete when ending the session, save context so the next session can resume without losing state:
+
+```
+Copy .claude/sessions/_template.md → .claude/sessions/context_session_GH-$ISSUE_NUMBER.md
+Fill in: current step, completed steps, open questions, key decisions, files modified.
+```
+
 # Rules
 
 - **Never write implementation code before the failing test exists** — this is the single most important rule

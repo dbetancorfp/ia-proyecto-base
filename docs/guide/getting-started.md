@@ -48,22 +48,20 @@ Los archivos en `ai-specs/specs/` son el núcleo de la plantilla. Debes actualiz
 
 ## Configurar MCPs (opcional pero recomendado)
 
-El archivo `.claude/settings.json` incluye tres MCPs:
+El archivo `.claude/settings.json` incluye tres MCPs preconfigurados:
 
-```json
-{
-  "mcpServers": {
-    "github": { ... },               // integración con gh CLI
-    "sequential-thinking": { ... },  // razonamiento estructurado
-    "context7": { ... }              // consulta de docs de librerías
-  }
-}
-```
+| MCP | Qué hace | Cuándo lo usa Claude |
+|---|---|---|
+| `github` | Lee y escribe Issues, PRs y comentarios en GitHub | `/enrich-us`, `/review-pr`, `/commit`, `/deploy` |
+| `sequential-thinking` | Descompone problemas complejos en pasos estructurados | `/plan-backend-ticket`, `/plan-frontend-ticket` |
+| `context7` | Consulta documentación actualizada de librerías (Nuxt, Prisma, Vue…) | `/develop-backend`, `/develop-frontend` |
 
 Añade tu `GITHUB_TOKEN` a `.env.local`:
 ```bash
 GITHUB_TOKEN=ghp_tu_token_aqui
 ```
+
+> Los MCPs se activan automáticamente — no necesitas invocarlos manualmente. Claude los usa cuando el comando que estás ejecutando los necesita.
 
 ## Iniciar tu primera sesión
 
@@ -73,4 +71,30 @@ Abre el proyecto en VS Code con la extensión de Claude Code y prueba:
 /explain
 ```
 
-Claude leerá los estándares y te dará una visión general del proyecto. Desde ahí, sigue el [Resumen del flujo de trabajo](/guide/workflow).
+Claude leerá los estándares y te dará una visión general del proyecto.
+
+## Tu primer día: ejemplo paso a paso
+
+Supón que tienes un Issue #1 "Como usuario quiero registrarme con email y contraseña":
+
+```bash
+# 1. Enriquece el Issue con criterios de aceptación
+/enrich-us 1
+
+# 2. Revisa y aprueba el Issue enriquecido en GitHub, luego planifica
+/plan-backend-ticket 1
+# → Genera ai-specs/changes/GH-1_backend.md — aprueba el plan antes de continuar
+
+# 3. Implementa con TDD (tests primero, código después)
+/develop-backend 1
+# → Crea feature/GH-1-backend, escribe tests en RED, implementa hasta GREEN
+
+# 4. Revisa el PR antes de mergear
+/review-pr 1
+
+# 5. Mergea y despliega a staging
+gh pr merge 1 --squash
+/deploy staging
+```
+
+Desde ahí, sigue el [Resumen del flujo de trabajo](/guide/workflow) o la guía completa para [Iniciar un proyecto nuevo](/guide/new-project).

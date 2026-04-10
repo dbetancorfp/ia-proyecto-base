@@ -109,6 +109,24 @@ Your AI copilot will automatically load:
 
 All paths and rules are configured to work seamlessly without manual adjustments.
 
+## 🗺️ Agent Decision Matrix
+
+| Situation | Agent / Command to use |
+|---|---|
+| Talking to the client, capturing requirements | `/enrich-us` + `product-strategy-analyst` |
+| Planning a backend feature (server layer) | `/plan-backend-ticket` + `backend-developer` |
+| Planning a frontend feature (UI/UX) | `/plan-frontend-ticket` + `frontend-developer` |
+| Implementing backend (TDD, step by step) | `/develop-backend` |
+| Implementing frontend from Figma | `/develop-frontend` |
+| Writing tests before implementation | `qa-engineer` |
+| Pre-merge security + quality review | `/review-pr` + `security-reviewer` + `qa-engineer` |
+| Bug found in staging | New Issue → `/enrich-us` → `/plan-*-ticket` → `/develop-*` |
+| Deploying to staging or production | `/deploy staging` / `/deploy production` |
+| Understanding a concept or piece of code | `/explain` |
+| Improving a prompt | `/meta-prompt` |
+| Docs out of date after code change | `/update-docs` |
+| Creating a commit and PR | `/commit` |
+
 ## 💡 Usage: Command-Based Development Workflow
 
 The most efficient way to work with this setup is using a command-based workflow:

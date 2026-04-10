@@ -58,7 +58,10 @@ alwaysApply: true
 ### Testing
 - **Vitest 4**: Test runner (replaces Jest) — same API, much faster
 - **Coverage**: `@vitest/coverage-v8` — threshold 90% for all metrics
-- **Test location**: `tests/` at project root + `*.test.ts` co-located files
+- **Test locations**:
+  - `tests/` — Vitest unit tests for services, domain entities, schemas (root level)
+  - `e2e/` — Playwright E2E tests (root level)
+  - Co-located `*.test.ts` alongside source files is allowed for utility functions only
 
 ### Development Tools
 - **ESLint**: Linting with TypeScript + Vue rules
