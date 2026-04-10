@@ -27,8 +27,8 @@ It's highly recommended to be used along with Spec-Driven Development frameworks
 └── ai-specs/                              # All AI knowledge for this project
     ├── specs/                             # Technical standards and contracts
     │   ├── base-standards.mdc             # Core rules — single source of truth (CLAUDE.md target)
-    │   ├── backend-standards.mdc          # DDD, Express, Prisma, testing
-    │   ├── frontend-standards.mdc         # React, React Bootstrap, Cypress
+    │   ├── backend-standards.mdc          # DDD, Nitro/H3, Prisma, Valibot, Vitest
+    │   ├── frontend-standards.mdc         # Vue 3, Pinia, PrimeVue 4, Playwright
     │   ├── documentation-standards.mdc    # Docs structure and maintenance
     │   ├── api-spec.yml                   # OpenAPI 3.0 contract (replace with your own)
     │   ├── data-model.md                  # Domain entities and DB schema (replace with your own)
@@ -37,7 +37,7 @@ It's highly recommended to be used along with Spec-Driven Development frameworks
     ├── .agents/                           # Specialized agent role definitions
     │   ├── product-strategy-analyst.md    # Role: Discovery, use cases, value proposition
     │   ├── backend-developer.md           # Role: DDD backend planning (never implements)
-    │   ├── frontend-developer.md          # Role: React frontend planning (never implements)
+    │   ├── frontend-developer.md          # Role: Vue 3 frontend planning (never implements)
     │   ├── qa-engineer.md                 # Role: TDD test generation and coverage review
     │   └── security-reviewer.md          # Role: OWASP audit before merge
     │
@@ -261,10 +261,10 @@ All development follows principles defined in `ai-specs/specs/base-standards.mdc
   - Testing requirements
 
 - **Frontend Standards**: `ai-specs/specs/frontend-standards.mdc`
-  - React component patterns
-  - UI/UX guidelines
-  - State management
-  - Component testing
+  - Vue 3 `<script setup>` component patterns
+  - PrimeVue 4 UI components
+  - Pinia Setup Stores
+  - Playwright E2E testing
 
 - **Documentation Standards**: `ai-specs/specs/documentation-standards.mdc`
   - Technical documentation structure
