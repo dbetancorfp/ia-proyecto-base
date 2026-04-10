@@ -10,7 +10,7 @@
 | **H3** | Manejadores de eventos HTTP — reemplaza los controladores de Express |
 | **TypeScript 5** | Modo estricto en todo el código |
 | **Prisma 7** | ORM con `@prisma/adapter-pg` |
-| **PostgreSQL** | Base de datos (Docker en desarrollo) |
+| **PostgreSQL 16** | Base de datos (instalación local, igual que en producción) |
 | **Valibot** | Validación de requests |
 | **Vitest** | Tests unitarios (reemplaza Jest) |
 
