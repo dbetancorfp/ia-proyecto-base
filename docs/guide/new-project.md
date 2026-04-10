@@ -190,32 +190,33 @@ Claude te guía a través del checklist de pre-despliegue, verifica que los test
 
 ## Resumen del ciclo
 
-```
-Nuevo proyecto
-      │
-      ▼
-Fase 0 — Preparar entorno + clonar plantilla
-      │
-      ▼
-Fase 1 — Definir dominio (data-model + api-spec)
-      │
-      ▼
-Fase 2 — Discovery con cliente  ◄──────────────┐
-      │                                         │
-      ▼                                         │
-Fase 3 — Crear + enriquecer Issues              │
-      │                                         │
-      ▼                                         │
-Fase 4 — Planificar implementación              │
-      │                                         │
-      ▼                                         │
-Fase 5 — Implementar con TDD                   │
-      │                                         │
-      ▼                                         │
-Fase 6 — Revisar PR                             │
-      │                                         │
-      ▼                                         │
-Fase 7 — Desplegar ──── Nueva funcionalidad ────┘
+```mermaid
+flowchart TD
+    START["Nuevo proyecto"] --> F0
+
+    F0["Fase 0\nPreparar entorno + clonar plantilla"]
+    F1["Fase 1\nDefinir dominio\ndata-model + api-spec"]
+    F2["Fase 2\nDiscovery con el cliente"]
+    F3["Fase 3\nCrear + enriquecer Issues\n/enrich-us"]
+    F4["Fase 4\nPlanificar implementación\n/plan-backend-ticket · /plan-frontend-ticket"]
+    F5["Fase 5\nImplementar con TDD\n/develop-backend · /develop-frontend"]
+    F6["Fase 6\nRevisar PR\n/review-pr"]
+    F7["Fase 7\nDesplegar\n/deploy"]
+    PROD["Funcionalidad en producción"]
+
+    F0 --> F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> PROD
+    PROD -->|"Nueva funcionalidad"| F2
+
+    style START fill:#6366f1,color:#fff,stroke:none
+    style PROD fill:#22c55e,color:#fff,stroke:none
+    style F0 fill:#e0e7ff,stroke:#6366f1
+    style F1 fill:#e0e7ff,stroke:#6366f1
+    style F2 fill:#fef9c3,stroke:#eab308
+    style F3 fill:#fef9c3,stroke:#eab308
+    style F4 fill:#fef9c3,stroke:#eab308
+    style F5 fill:#fef9c3,stroke:#eab308
+    style F6 fill:#fef9c3,stroke:#eab308
+    style F7 fill:#fef9c3,stroke:#eab308
 ```
 
 Cada iteración del ciclo (fases 2–7) produce una funcionalidad en producción. El ciclo se repite para cada nuevo Issue.
