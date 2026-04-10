@@ -14,6 +14,26 @@ Claude puede adoptar distintos roles según el paso del flujo de trabajo. La cla
 | Revisión | Revisor | DevSec + QA | `/review-pr` |
 | Despliegue | Director | DevOps | `/deploy` |
 
+## Matriz de decisión
+
+¿No sabes qué comando o agente usar? Esta tabla cubre las situaciones más comunes:
+
+| Situación | Comando / Agente |
+|---|---|
+| Hablar con el cliente, capturar requisitos | `/enrich-us` + `product-strategy-analyst` |
+| Planificar una funcionalidad de servidor | `/plan-backend-ticket` + `backend-developer` |
+| Planificar una funcionalidad de UI | `/plan-frontend-ticket` + `frontend-developer` |
+| Implementar backend con TDD | `/develop-backend` |
+| Implementar frontend desde Figma | `/develop-frontend` |
+| Escribir tests antes de implementar | `qa-engineer` |
+| Revisión de seguridad + calidad antes del merge | `/review-pr` + `security-reviewer` + `qa-engineer` |
+| Bug encontrado en staging | Nuevo Issue → `/enrich-us` → `/plan-*-ticket` → `/develop-*` |
+| Desplegar a staging o producción | `/deploy staging` / `/deploy production` |
+| Entender un concepto o trozo de código | `/explain` |
+| Mejorar un prompt existente | `/meta-prompt` |
+| Docs desactualizadas tras cambios de código | `/update-docs` |
+| Crear un commit y PR | `/commit` |
+
 ## Agentes especializados
 
 La carpeta `.agents/` define cinco roles especializados. Claude los adopta automáticamente cuando ejecutas el comando correspondiente.

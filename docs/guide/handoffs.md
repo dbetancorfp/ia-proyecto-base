@@ -12,7 +12,7 @@ Estos archivos están en el **gitignore** — son documentos de trabajo, no fuen
 
 ```
 Guarda el estado actual de la sesión en .claude/sessions/context_session_GH-42.md
-Sigue la plantilla en ai-specs/handoffs/_template.md
+Sigue la plantilla en .claude/sessions/_template.md
 ```
 
 O usa la plantilla directamente — el archivo captura:
@@ -31,7 +31,7 @@ Antes de escribir cualquier código, dime cuál es el siguiente paso y confírma
 
 ## Plantilla de handoff
 
-Consulta `ai-specs/handoffs/_template.md` para la estructura completa. Secciones clave:
+Consulta `.claude/sessions/_template.md` para la estructura completa. Secciones clave:
 
 ```markdown
 # Handoff: {feature} — GH-N
