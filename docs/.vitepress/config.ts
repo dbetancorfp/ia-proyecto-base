@@ -70,6 +70,7 @@ export default withMermaid(defineConfig({
             { text: '/commit', link: '/commands/commit' },
             { text: '/deploy', link: '/commands/deploy' },
             { text: '/explain', link: '/commands/explain' },
+            { text: '/update-docs', link: '/commands/update-docs' },
             { text: '/meta-prompt', link: '/commands/meta-prompt' },
           ],
         },

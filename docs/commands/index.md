@@ -14,9 +14,9 @@ Los slash commands son prompts preconfigurados almacenados en `ai-specs/.command
 | [`/review-pr`](/commands/review-pr) | Antes de hacer merge de un PR | Informe de revisión publicado como comentario en el PR |
 | [`/commit`](/commands/commit) | Tras la implementación | Commit + PR con `Closes #N` |
 | [`/deploy`](/commands/deploy) | Después de que el PR está mergeado | Despliegue a staging o producción |
-| `/explain` | En cualquier momento | Explicación didáctica del código seleccionado |
-| `/update-docs` | Tras cambios de código | Sincroniza `api-spec.yml` y `data-model.md` |
-| `/meta-prompt` | Para mejorar un prompt | Versión refinada del prompt dado |
+| [`/explain`](/commands/explain) | En cualquier momento | Explicación didáctica del concepto o código seleccionado |
+| [`/update-docs`](/commands/update-docs) | Tras cambios de código | Sincroniza `api-spec.yml` y `data-model.md` |
+| [`/meta-prompt`](/commands/meta-prompt) | Para mejorar un prompt | Versión refinada del prompt dado |
 
 ## Cómo funcionan
 
