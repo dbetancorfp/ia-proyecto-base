@@ -46,7 +46,7 @@ alwaysApply: true
 - **TypeScript 5**: Strict typing throughout
 
 ### Database & ORM
-- **PostgreSQL**: Relational database (Docker in development)
+- **PostgreSQL 16**: Relational database (local installation, same as production)
 - **Prisma 7**: ORM with `@prisma/adapter-pg` for direct `pg` connection
 - **Schema location**: `server/db/prisma/schema.prisma`
 - **Migrations**: `npm run prisma:migrate:dev`

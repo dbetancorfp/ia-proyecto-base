@@ -6,7 +6,7 @@ Setup instructions and workflow reference for the Nuxt 4 application.
 
 - **Node.js** v20 or higher (LTS recommended)
 - **npm** v10 or higher
-- **Docker** and **Docker Compose** (for PostgreSQL)
+- **PostgreSQL 16** installed locally
 - **Git**
 
 ---
@@ -37,33 +37,25 @@ NODE_ENV=development
 
 ---
 
-## 3. Database Setup (PostgreSQL via Docker)
+## 3. Database Setup (Local PostgreSQL)
+
+Create the database user and database using `psql`:
 
 ```bash
-# Start PostgreSQL container
-docker-compose up -d
-
-# Verify it is running
-docker-compose ps
+psql -U postgres
 ```
 
-Default `docker-compose.yml` configuration:
+```sql
+CREATE USER appuser WITH PASSWORD 'apppassword';
+CREATE DATABASE appdb OWNER appuser;
+GRANT ALL PRIVILEGES ON DATABASE appdb TO appuser;
+\q
+```
 
-```yaml
-services:
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_USER: appuser
-      POSTGRES_PASSWORD: apppassword
-      POSTGRES_DB: appdb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+Verify the connection:
 
-volumes:
-  postgres_data:
+```bash
+psql -U appuser -d appdb -h localhost
 ```
 
 ---

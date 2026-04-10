@@ -17,7 +17,7 @@ El stack tecnológico es **Nuxt 4** (fullstack), **Vue 3**, **Pinia**, **PrimeVu
 - [Claude Code](https://claude.ai/code) instalado (CLI o extensión de VS Code)
 - [Git](https://git-scm.com/) y una cuenta de GitHub
 - [Node.js](https://nodejs.org/) v20+
-- [Docker](https://www.docker.com/) (para PostgreSQL en desarrollo)
+- [PostgreSQL 16](https://www.postgresql.org/) instalado localmente
 
 ## Importar en tu proyecto
 
