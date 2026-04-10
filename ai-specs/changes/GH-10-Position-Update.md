@@ -18,7 +18,7 @@ The position update functionality has to be implemented as a comprehensive REST 
 
 ### Database Fields Updateable
 
-Based on the `Position` model from `prisma/schema.prisma`, the following fields are editable:
+Based on the `Position` model from `server/db/prisma/schema.prisma`, the following fields are editable:
 
 **Required Fields (validated when provided):**
 - `title` (string, max 100 chars) - Position title
