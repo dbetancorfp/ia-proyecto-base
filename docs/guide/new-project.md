@@ -194,14 +194,14 @@ Claude te guía a través del checklist de pre-despliegue, verifica que los test
 flowchart TD
     START["Nuevo proyecto"] --> F0
 
-    F0["Fase 0\nPreparar entorno + clonar plantilla"]
-    F1["Fase 1\nDefinir dominio\ndata-model + api-spec"]
-    F2["Fase 2\nDiscovery con el cliente"]
-    F3["Fase 3\nCrear + enriquecer Issues\n/enrich-us"]
-    F4["Fase 4\nPlanificar implementación\n/plan-backend-ticket · /plan-frontend-ticket"]
-    F5["Fase 5\nImplementar con TDD\n/develop-backend · /develop-frontend"]
-    F6["Fase 6\nRevisar PR\n/review-pr"]
-    F7["Fase 7\nDesplegar\n/deploy"]
+    F0["Fase 0 — Preparar entorno"]
+    F1["Fase 1 — Definir dominio"]
+    F2["Fase 2 — Discovery"]
+    F3["Fase 3 — Issues /enrich-us"]
+    F4["Fase 4 — Planificar /plan-ticket"]
+    F5["Fase 5 — TDD /develop"]
+    F6["Fase 6 — Revisar /review-pr"]
+    F7["Fase 7 — Desplegar /deploy"]
     PROD["Funcionalidad en producción"]
 
     F0 --> F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> PROD
