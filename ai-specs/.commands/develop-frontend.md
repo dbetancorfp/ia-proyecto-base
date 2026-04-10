@@ -18,12 +18,23 @@ Implement the UI from the Figma design.
 2. Generate a short implementation plan including:
    - Component tree (from atoms → molecules → organisms → page)
    - File/folder structure
-3. Then **write the code** for:
+3. **RED — Write failing tests first** before writing any component code:
+   - Playwright E2E test stubs in `e2e/` describing the user flow
+   - Vitest unit tests in `tests/` for stores and composables
+   - Run `npm test` and `npm run test:e2e` to confirm all new tests are RED
+
+4. **GREEN — Implement the minimum code to pass the tests:**
    - Vue SFC components (`<script setup lang="ts">`, no Options API)
    - Pinia stores for shared state, composables for component-level logic
    - PrimeVue components — check the library before writing custom elements
    - Styles following project conventions (CSS vars, scoped styles, or global `app/assets/css/`)
-   - Playwright E2E tests in `e2e/` and Vitest unit tests in `tests/`
+   - Run `npm test` after each component — all tests must be GREEN before moving on
+
+5. **REFACTOR** — clean up without breaking tests. Then verify:
+   ```bash
+   npm run typecheck
+   npm run lint
+   ```
 
 ## Feedback Loop
 
