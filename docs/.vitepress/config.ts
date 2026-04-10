@@ -69,6 +69,8 @@ export default withMermaid(defineConfig({
             { text: '/review-pr', link: '/commands/review-pr' },
             { text: '/commit', link: '/commands/commit' },
             { text: '/deploy', link: '/commands/deploy' },
+            { text: '/explain', link: '/commands/explain' },
+            { text: '/meta-prompt', link: '/commands/meta-prompt' },
           ],
         },
       ],

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: "{Your App Name} API"
+  title: "{Your App Name} API"  # TODO: replace with your app name
   description: |
     REST API served by the Nuxt 4 server layer (Nitro/H3).
 
@@ -20,7 +20,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Development (Nuxt dev server — frontend + API unified)
-  - url: https://your-app.com
+  - url: https://your-app.com  # TODO: replace with your production URL
     description: Production
 
 # ─────────────────────────────────────────────
