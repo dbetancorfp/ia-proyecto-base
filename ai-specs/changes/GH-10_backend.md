@@ -1971,7 +1971,7 @@ The implementation supports partial updates, meaning:
 - **Existing Services**: Follow patterns from `candidateService.ts` and existing `positionService.ts`
 
 ### Database Requirements
-- PostgreSQL database (already running via Docker)
+- PostgreSQL database (running locally)
 - Prisma schema already includes all required Position fields
 - No database migrations needed
 
