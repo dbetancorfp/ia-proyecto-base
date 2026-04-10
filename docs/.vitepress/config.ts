@@ -30,6 +30,7 @@ export default withMermaid(defineConfig({
           text: 'Introducción',
           items: [
             { text: 'Primeros pasos', link: '/guide/getting-started' },
+            { text: 'Iniciar un proyecto nuevo', link: '/guide/new-project' },
             { text: 'Flujo de trabajo', link: '/guide/workflow' },
             { text: 'Roles de IA', link: '/guide/roles' },
           ],
