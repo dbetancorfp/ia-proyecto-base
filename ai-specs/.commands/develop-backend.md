@@ -27,8 +27,9 @@ Read the relevant standards:
 ## 1. Create the feature branch
 
 ```bash
-git checkout -b feature/GH-$ISSUE_NUMBER-short-description
-# Example: feature/GH-42-user-authentication
+git checkout -b feature/GH-$ISSUE_NUMBER-backend
+# Example: feature/GH-42-backend
+# Suffix -backend allows parallel frontend work on feature/GH-42-frontend
 ```
 
 ## 2. RED — Write failing tests first
@@ -106,7 +107,7 @@ Stage only the files related to this issue:
 ```bash
 git add <files affected by this issue>
 git commit -m "GH-$ISSUE_NUMBER: <imperative description of what was implemented>"
-git push -u origin feature/GH-$ISSUE_NUMBER-short-description
+git push -u origin feature/GH-$ISSUE_NUMBER-backend
 gh pr create \
   --title "[GH-$ISSUE_NUMBER] <feature title>" \
   --body "Closes #$ISSUE_NUMBER"

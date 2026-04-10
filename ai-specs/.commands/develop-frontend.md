@@ -14,23 +14,29 @@ Implement the UI from the Figma design.
 
 # Process and rules
 
-1. Analyze the Figma design from the provided Figma URL using the MCP, and the ticket specs.
-2. Generate a short implementation plan including:
+1. Create the feature branch:
+   ```bash
+   git checkout -b feature/GH-$1-frontend
+   # Example: feature/GH-42-frontend
+   # Suffix -frontend allows parallel backend work on feature/GH-42-backend
+   ```
+2. Analyze the Figma design from the provided Figma URL using the MCP, and the ticket specs.
+3. Generate a short implementation plan including:
    - Component tree (from atoms → molecules → organisms → page)
    - File/folder structure
-3. **RED — Write failing tests first** before writing any component code:
+4. **RED — Write failing tests first** before writing any component code:
    - Playwright E2E test stubs in `e2e/` describing the user flow
    - Vitest unit tests in `tests/` for stores and composables
    - Run `npm test` and `npm run test:e2e` to confirm all new tests are RED
 
-4. **GREEN — Implement the minimum code to pass the tests:**
+5. **GREEN — Implement the minimum code to pass the tests:**
    - Vue SFC components (`<script setup lang="ts">`, no Options API)
    - Pinia stores for shared state, composables for component-level logic
    - PrimeVue components — check the library before writing custom elements
    - Styles following project conventions (CSS vars, scoped styles, or global `app/assets/css/`)
    - Run `npm test` after each component — all tests must be GREEN before moving on
 
-5. **REFACTOR** — clean up without breaking tests. Then verify:
+6. **REFACTOR** — clean up without breaking tests. Then verify:
    ```bash
    npm run typecheck
    npm run lint

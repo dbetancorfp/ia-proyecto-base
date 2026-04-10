@@ -40,14 +40,14 @@ Follow this template:
 Detailed steps, typically:
 
 #### **Step 0: Create Feature Branch**
-- **Action**: Create and switch to a new feature branch following the development workflow. Check if it exists and if not, create it
-- **Branch Naming**: `feature/GH-[issue-number]-backend`, e.g. `feature/GH-42-backend` — do not stay on the general issue branch; suffix `-backend` to allow parallel frontend work
-- **Implementation Steps**:
-  1. Ensure you're on the latest `main` or `develop` branch (or appropriate base branch)
-  2. Pull latest changes: `git pull origin [base-branch]`
-  3. Create new branch: `git checkout -b [branch-name]`
-  4. Verify branch creation: `git branch`
-- **Notes**: This must be the FIRST step before any code changes. Refer to `ai-specs/specs/backend-standards.mdc` section "Development Workflow" for specific branch naming conventions and workflow rules.
+- **Action**: The developer (or `/develop-backend`) must create and switch to a new feature branch before writing any code. The planner does NOT execute this step — it is an instruction for whoever implements the plan.
+- **Branch Naming**: `feature/GH-[issue-number]-backend`, e.g. `feature/GH-42-backend` — suffix `-backend` allows parallel frontend work on `feature/GH-42-frontend`
+- **Commands**:
+  ```bash
+  git checkout main && git pull origin main
+  git checkout -b feature/GH-[issue-number]-backend
+  ```
+- **Notes**: This must be the FIRST step before any code changes. See `ai-specs/specs/backend-standards.mdc` → "Development Workflow" for branch naming rules.
 
 #### **Step N: [Action Name]**
 - **File**: Target file path
@@ -57,14 +57,15 @@ Detailed steps, typically:
 - **Dependencies**: Required imports
 - **Implementation Notes**: Technical details
 
-Common steps (Nuxt server DDD layers):
-- **Step 1**: Valibot schema in `server/domain/schemas/`
-- **Step 2**: Domain entity update (if needed) in `server/domain/entities/`
-- **Step 3**: Repository interface update in `server/domain/repositories/`
-- **Step 4**: Prisma repository implementation in `server/infrastructure/repositories/`
-- **Step 5**: Service method in `server/services/`
-- **Step 6**: H3 API route handler in `server/api/`
-- **Step 7**: Unit tests with Vitest (service + schema; happy path, errors, edge cases)
+Common steps (Nuxt server DDD layers — TDD order: tests BEFORE implementation):
+- **Step 1**: Failing Vitest unit tests in `tests/` — RED phase (write tests before any implementation code)
+- **Step 2**: Valibot schema in `server/services/{domain}/{domain}Schema.ts`
+- **Step 3**: Domain entity (if new entity) in `server/domain/entities/`
+- **Step 4**: Repository interface (if new entity) in `server/domain/repositories/`
+- **Step 5**: Service method in `server/services/{domain}/{domain}Service.ts`
+- **Step 6**: Prisma repository implementation (if new entity) in `server/infrastructure/`
+- **Step 7**: H3 API route handler in `server/api/`
+- **Step 8**: All tests GREEN — run `npm test && npm run typecheck && npm run lint`
 
 Example of a good structure:
 **Implementation Steps**:

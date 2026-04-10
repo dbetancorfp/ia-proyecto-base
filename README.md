@@ -209,7 +209,7 @@ The AI will follow the plan precisely, implementing each step with TDD, proper t
 
 ### 📝 Demo Enriched User Story
 
-Check out **`ai-specs/changes/GH-10-Position-Update.md`** for a complete example (naming pattern: `GH-[issue_number]-Feature-Name.md`) of what an enriched user story looks like. This comprehensive document includes:
+Check out **`ai-specs/changes/GH-10-Position-Update.md`** for a snapshot of what an enriched user story looks like. Note: `/enrich-us` writes enriched content directly to the GitHub Issue body — this file is a manually saved reference export, not auto-generated. This comprehensive document includes:
 
 - **User Story**: Clear description with persona, goal, and benefit
 - **Technical Specification**: Complete technical implementation details

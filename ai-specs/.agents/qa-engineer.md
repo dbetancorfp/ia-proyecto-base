@@ -44,6 +44,37 @@ All tests must follow these standards (from `ai-specs/specs/backend-standards.md
 
 ## Backend Test Patterns (Vitest + TypeScript)
 
+### Service singleton reset
+
+Services in this project use a singleton factory pattern (`getUserService(repo?)`). Always reset the singleton between tests to prevent state leaking across tests:
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { getUserService } from '~/server/services/user/userService'
+
+// Mock repository
+const mockRepository = {
+  findOne: vi.fn(),
+  findAll: vi.fn(),
+  save: vi.fn(),
+  delete: vi.fn(),
+}
+
+describe('UserService', () => {
+  let service: ReturnType<typeof getUserService>
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    // Pass mock repo to bypass the singleton cache and get a fresh instance
+    service = getUserService(mockRepository as any)
+  })
+
+  // ... tests use `service` directly
+})
+```
+
+### Full test block pattern
+
 ```typescript
 import { describe, it, expect, vi } from 'vitest'
 
@@ -78,6 +109,7 @@ describe('FeatureName', () => {
   });
 });
 ```
+
 
 ## Frontend Test Patterns (Playwright E2E)
 
