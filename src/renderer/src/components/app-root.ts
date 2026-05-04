@@ -249,7 +249,9 @@ export class AppRoot extends LitElement {
             <h3>Alumnado</h3>
             <div class="sub">
               ${this.selectedCourseId
-                ? (this.loading ? 'Cargando…' : `${count} alumno${count !== 1 ? 's' : ''}`)
+                ? this.syncing  ? 'Sincronizando con Moodle…'
+                : this.loading  ? 'Cargando…'
+                : `${count} alumno${count !== 1 ? 's' : ''}`
                 : 'Selecciona un módulo'}
             </div>
           </div>
