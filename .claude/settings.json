@@ -1,16 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git:*)",
-      "Bash(gh:*)",
-      "Bash(npm:*)",
-      "Bash(npx:*)",
-      "Bash(pytest:*)",
-      "Bash(python:*)"
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(python3 *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(curl -s https://www3.gobiernodecanarias.org/medusa/eforma/campus/webservice/*)"
     ],
     "deny": [
-      "Bash(rm -rf:*)",
-      "Bash(git push --force:*)"
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)"
     ]
   },
   "mcpServers": {
@@ -28,6 +31,10 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "claude-mem": {
+      "command": "npx",
+      "args": ["-y", "claude-mem@latest"]
     }
   }
 }

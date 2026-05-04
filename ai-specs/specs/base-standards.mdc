@@ -1,33 +1,126 @@
----
-description: This document contains all development rules and guidelines for this project, applicable to all AI agents (Claude, Cursor, Codex, Gemini, etc.).
-alwaysApply: true
----
+# CLAUDE.md
 
-## 1. Core Principles
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-- **Small tasks, one at a time**: Always work in baby steps, one at a time. Never go forward more than one step.
-- **Test-Driven Development**: Start with failing tests for any new functionality (TDD), according to the task details.
-- **Type Safety**: All code must be fully typed.
-- **Clear Naming**: Use clear, descriptive names for all variables and functions.
-- **Incremental Changes**: Prefer incremental, focused changes over large, complex modifications.
-- **Question Assumptions**: Always question assumptions and inferences.
-- **Pattern Detection**: Detect and highlight repeated code patterns.
+## Project Overview
 
-## 2. Language Standards
-- **English Only**: All technical artifacts must always use English, including:
-    - Code (variables, functions, classes, comments, error messages, log messages)
-    - Documentation (README, guides, API docs)
-    - GitHub Issues (titles, descriptions, comments)
-    - Data schemas and database names
-    - Configuration files and scripts
-    - Git commit messages
-    - Test names and descriptions
+**Cuaderno de Aula Digital** — a local dashboard application for a vocational training (FP) teacher in the Canary Islands to digitalize the classroom notebook. The primary module is **Sistemas Informáticos** in the **DAW** (Desarrollo de Aplicaciones Web) cycle, academic year 25-26.
 
-## 3. Specific standards
+## Stack
 
-For detailed standards and guidelines specific to different areas of the project, refer to:
+| Layer     | Technology                                        |
+|-----------|---------------------------------------------------|
+| Desktop   | Electron 31 + electron-vite                       |
+| Main      | Node.js + TypeScript — servicios, SQLite, IPC     |
+| Renderer  | Lit Web Components + TypeScript + CSS puro        |
+| Base de datos | SQLite via `better-sqlite3`                   |
+| Deploy    | Local (localhost), single usuario                 |
+| Docs      | VitePress + Mermaid (en `docs/`)                  |
 
-- [Backend Standards](./backend-standards.mdc) - API development, database patterns, testing, security and backend best practices
-- [Frontend Standards](./frontend-standards.mdc) - Vue 3 SFC, Pinia stores, PrimeVue components, and Nuxt 4 frontend architecture
-- [Documentation Standards](./documentation-standards.mdc) - Technical documentation structure, formatting, and maintenance guidelines, including AI standards like this document
+## Data Sources
 
+| Source        | Data                                      | Status            |
+|---------------|-------------------------------------------|-------------------|
+| Campus/Moodle | Tasks, quizzes, grades, student lists     | API functional    |
+| PincelEkade   | Official student roster (matriculation)   | No known API yet  |
+| BOE           | Learning outcomes (RA), content, criteria | Public API        |
+
+## Moodle API
+
+- **Base URL:** `https://www3.gobiernodecanarias.org/medusa/eforma/campus`
+- **Version:** Moodle 4.5.5+
+- **Auth:** CAS SSO — token generated from user profile → Security → Access keys
+- **Credentials:** stored in `contextoInicial.txt` (token + userid)
+
+### Relevant web service functions
+
+```
+core_enrol_get_users_courses      → teacher's courses
+core_enrol_get_enrolled_users     → students per course
+mod_assign_get_assignments        → assignments
+mod_assign_get_grades             → assignment grades
+mod_quiz_get_quizzes_by_courses   → objective tests / quizzes
+gradereport_user_get_grade_items  → full gradebook
+core_calendar_get_calendar_events → calendar events
+core_course_get_contents          → course contents
+```
+
+REST endpoint pattern:
+```
+GET {BASE_URL}/webservice/rest/server.php
+  ?wstoken=<token>
+  &wsfunction=<function>
+  &moodlewsrestformat=json
+  &<function-specific-params>
+```
+
+### Target courses (25-26) — IDs confirmados
+
+| Moodle ID | Módulo |
+|-----------|--------|
+| `83943`   | 25-26 1DAW - SSF - Sistemas Informáticos ← principal |
+| `85540`   | 25-26 2DAW - DEW - Desarrollo web entorno cliente |
+| `100266`  | 25-26 2DAWs - DEW - Desarrollo web entorno cliente |
+| `98988`   | 25-26 1DAWs - DJK - Digitalización sectores productivos |
+| `114600`  | 25-26 2DAWs - CI4 - Proyecto Intermodular DAW |
+| `114466`  | 25-26 2DAW - CI4 - PRW - Proyecto |
+
+Definidos como constante en `src/shared/courses.ts`.
+
+## Development Commands
+
+```bash
+# Primera vez (better-sqlite3 es módulo nativo que necesita compilarse para Electron)
+npm install --ignore-scripts
+node node_modules/electron/install.js   # descarga el binario de Electron
+npm run rebuild                         # compila better-sqlite3 contra el Node de Electron
+
+# Desarrollo normal
+npm run dev              # modo desarrollo con hot reload
+npm run build            # compilación de producción
+
+# Documentación
+npm run docs:dev         # servidor VitePress en modo dev
+npm run docs:build       # compilar docs estáticas
+```
+
+## Project Structure
+
+```
+src/
+├── shared/
+│   └── types.ts                  # tipos compartidos (Alumno, MoodleCourse, ElectronAPI)
+├── main/                         # proceso principal (Node.js)
+│   ├── index.ts                  # entrada Electron, crea BrowserWindow
+│   ├── config.ts                 # carga/guarda config.json en userData
+│   ├── db.ts                     # conexión SQLite + migraciones
+│   ├── services/
+│   │   └── MoodleService.ts      # llamadas a la API REST de Moodle
+│   ├── repositories/
+│   │   └── AlumnoRepository.ts   # CRUD SQLite para alumnos
+│   └── ipc/
+│       └── handlers.ts           # registra todos los ipcMain.handle
+├── preload/
+│   └── index.ts                  # contextBridge → expone window.api al renderer
+└── renderer/
+    ├── index.html
+    └── src/
+        ├── main.ts               # entrada del renderer
+        ├── env.d.ts              # declara window.api con tipos
+        ├── styles/
+        │   └── global.css        # variables CSS globales (colores, espaciado, tipografía)
+        └── components/
+            └── app-root.ts       # componente Lit raíz
+
+docs/                             # VitePress — documentación del proyecto
+ai-specs/                         # especificaciones para agentes IA
+```
+
+## Architecture Notes
+
+- **IPC flow:** renderer → `window.api.*` (preload/contextBridge) → `ipcMain.handle` (handlers.ts) → Service/Repository
+- **Credenciales Moodle:** se guardan en `userData/config.json` (nunca en el código). Editar el fichero manualmente o implementar pantalla de ajustes.
+- **CSS:** variables globales en `global.css` atraviesan el Shadow DOM via custom properties (`var(--color-primary)` etc.). Estilos de componente en la propiedad `static styles` de cada LitElement.
+- **Shadow DOM activo** — el aislamiento de estilos es una ventaja con CSS puro.
+- **PincelEkade** no tiene API conocida — integración pendiente, posible importación CSV manual.
+- **better-sqlite3** es un módulo nativo; el `postinstall` lo recompila para la versión de Node de Electron automáticamente.
